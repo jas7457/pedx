@@ -27,9 +27,11 @@ export default function CollectionGrid() {
 
 	return (
 		<>
+			{/*
 			<div>
 				<ThemeButton href="/collections">Shop collections</ThemeButton>
 			</div>
+			*/}
 			<StyledCollectionGrid>
 				{data.collections.edges.map(product => (
 					<CollectionGridItem key={product.node.id} {...product.node} />
@@ -60,6 +62,7 @@ const StyledCollectionGrid = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	height: 800px;
+	max-height: 100vh;
 `;
 
 const spacing = 15;

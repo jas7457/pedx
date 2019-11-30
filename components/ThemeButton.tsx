@@ -34,8 +34,10 @@ export default styled(ThemeButton)`
 	color: white;
 	transition: background-color ${props => props.theme.transitionTime};
 	will-change: background-color;
+	letter-spacing: 2px;
 
-	&:hover {
+	&:hover,
+	&:focus {
 		background: ${props => props.theme.colors.primary.main};
 	}
 `;

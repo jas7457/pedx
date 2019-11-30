@@ -7,6 +7,6 @@ export default function ContrainedWidth({ children }: { children: JSX.Element })
 
 const StyledConstrainedWidth = styled.div`
 	width: 95%;
-	max-width: 1400px;
+	max-width: 1280px;
 	margin: 0 auto;
 `;

@@ -34,12 +34,7 @@ class MyApp extends App {
 				<CSSReset />
 
 				<ThemeProvider theme={theme}>
-					<h1>Header</h1>
-					<main>
-						<ConstrainedWidth>
-							<Component {...pageProps} />
-						</ConstrainedWidth>
-					</main>
+					<Component {...pageProps} />
 					<footer>Footer</footer>
 				</ThemeProvider>
 			</ApolloProvider>

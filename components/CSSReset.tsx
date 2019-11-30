@@ -371,6 +371,10 @@ const CSSReset = createGlobalStyle`
 	
 	a {
 		text-decoration: none;
+		color: inherit;
+		&:focus {
+			outline: none;
+		}
 	}
 	
 	button {
