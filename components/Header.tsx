@@ -1,101 +1,86 @@
-import React from 'react';
-import styled from 'styled-components';
+// library
+import React, { useState } from 'react';
 import Link from 'next/link';
+import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+
+// components
+import SidebarNav from './SidebarNav';
+
+import theme from '../config/theme';
 
 export default function Header() {
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 	return (
 		<StyledHeader>
-			<nav>
-				<ul>
-					<li>
-						<Link href="/">
-							<a>Home</a>
-						</Link>
-					</li>
+			<button className="clickable left" onClick={() => setIsSidebarOpen(isOpen => !isOpen)}>
+				<FontAwesomeIcon icon={faBars} />
+			</button>
 
-					<li>
-						<Link href="/about">
-							<a>About</a>
-						</Link>
-					</li>
+			<div className="center">
+				<Link href="/">
+					<a className="clickable">pedestrian</a>
+				</Link>
+			</div>
 
-					<li>
-						<Link href="/shop">
-							<a>Shop</a>
-						</Link>
-					</li>
+			<div className="right">
+				<button className="clickable login-button" onClick={() => alert('Not yet implemented')}>
+					Login
+				</button>
 
-					<li>
-						<Link href="/contact">
-							<a>Contact</a>
-						</Link>
-					</li>
+				<button className="clickable" onClick={() => alert('Not yet implemented')}>
+					<FontAwesomeIcon icon={faShoppingCart} />
+				</button>
+			</div>
 
-					<li>
-						<Link href="/faq">
-							<a>FAQs</a>
-						</Link>
-					</li>
-
-					<li>
-						<Link href="/looks">
-							<a>Looks</a>
-						</Link>
-					</li>
-				</ul>
-			</nav>
+			<SidebarNav isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 		</StyledHeader>
 	);
 }
 
 const StyledHeader = styled.header`
-	position: absolute;
-	top: 40px;
+	position: fixed;
+	display: flex;
+	top: 0;
+	padding: ${theme.dimensions['4']};
+	height: ${theme.dimensions['10']};
 	width: 100%;
-	height: calc(100vh - 20px);
-	color: white;
+	z-index: 2;
+	box-shadow: ${theme.boxShadow.bottom};
+	background-color: rgba(255, 255, 255, 0.9);
 
-	nav {
-		position: sticky;
-		top: 10px;
+	.clickable {
+		color: ${theme.colors.text};
+		will-change: color;
+		transition: color ${theme.transitionTime};
+
+		&:hover {
+			color: ${theme.colors.primary.main};
+		}
 	}
 
-	ul {
-		list-style: none;
+	.left {
+		flex-shrink: 0;
+	}
+
+	.center {
+		flex-shrink: 1;
+		flex-grow: 1;
 		text-align: center;
+		font-size: ${theme.text['2xl']};
+		text-transform: uppercase;
+		letter-spacing: 12px;
 	}
 
-	li {
-		display: inline-block;
-		text-transform: uppercase;
-		font-weight: 100;
-		letter-spacing: 2px;
+	.right {
+		display: flex;
+		align-items: center;
+		flex-shrink: 0;
+	}
 
-		& ~ li {
-			margin-left: 1rem;
-		}
-
-		a {
-			position: relative;
-
-			&:after {
-				border-bottom: 2px solid ${props => props.theme.colors.primary.main};
-				content: '';
-				display: block;
-				width: 0;
-				position: absolute;
-				left: 50%;
-				transform: translateX(-50%);
-				transition: ${props => props.theme.transitionTime} width;
-				will-change: width;
-			}
-
-			&:hover,
-			&:focus {
-				&:after {
-					width: 100%;
-				}
-			}
-		}
+	.login-button {
+		margin-right: ${theme.dimensions['2']};
 	}
 `;

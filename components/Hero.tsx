@@ -1,31 +1,30 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
 import BackgroundImage from './BackgroundImage';
 
-function Hero(props: HeroProps) {
+export default function Hero(props: HeroProps) {
 	const { image, children, className } = props;
 
 	return (
-		<BackgroundImage image={image} paddingBottom="57%" className={className}>
-			<div className="children">{children}</div>
-		</BackgroundImage>
+		<StyledBackgroundImage image={image} className={className}>
+			{children}
+		</StyledBackgroundImage>
 	);
 }
 
-interface HeroProps {
-	className?: string;
-	image: string;
-	children: any;
-}
-
-export default styled(Hero)`
+const StyledBackgroundImage = styled(BackgroundImage)`
 	max-height: 80vh;
 
-	.children {
-		position: absolute;
-		top: 20px;
-		left: 20px;
-		width: calc(100% - 40px);
+	&:after {
+		content: '';
+		display: block;
+		padding-bottom: 57%;
 	}
 `;
+
+interface HeroProps {
+	image: string;
+	children: ReactNode;
+	className?: string;
+}

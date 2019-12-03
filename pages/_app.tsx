@@ -3,13 +3,10 @@ import App, { AppInitialProps } from 'next/app';
 import { ApolloProvider } from 'react-apollo';
 import withApollo, { InitApolloOptions } from 'next-with-apollo';
 import ApolloClient, { Operation } from 'apollo-boost';
-import { ThemeProvider } from 'styled-components';
 
-import CSSReset from '../components/CSSReset';
-import ConstrainedWidth from '../components/ConstrainedWidth';
-
-import theme from '../config/theme';
 import { SHOPIFY_GRAPHQL_ENDPOINT, SHOPIFY_STOREFRONT_ACCESS_TOKEN } from '../config/variables';
+
+import '../assets/styles/main.scss';
 
 class MyApp extends App {
 	// @ts-ignore
@@ -31,12 +28,7 @@ class MyApp extends App {
 
 		return (
 			<ApolloProvider client={apollo}>
-				<CSSReset />
-
-				<ThemeProvider theme={theme}>
-					<Component {...pageProps} />
-					<footer>Footer</footer>
-				</ThemeProvider>
+				<Component {...pageProps} />
 			</ApolloProvider>
 		);
 	}
@@ -48,13 +40,6 @@ export default withApollo(({ headers }: InitApolloOptions<any>) => {
 		fetchOptions: {},
 		request: (operation: Operation) => {
 			operation.setContext({
-				/*
-				fetchOptions: {
-					credentials: 'include',
-					'no-cors': true
-				},
-				 */
-
 				headers: {
 					...headers,
 					'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_ACCESS_TOKEN

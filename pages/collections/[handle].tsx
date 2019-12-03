@@ -1,10 +1,15 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import { useRouter } from 'next/router';
 import gql from 'graphql-tag';
-import {useQuery} from 'react-apollo';
+import { useQuery, QueryResult } from 'react-apollo';
+import styled from 'styled-components';
 
+import Layout from '../../components/Layout';
 import ProductList from '../../components/ProductList';
 import Hero from '../../components/Hero';
+import ConstrainedWidth from '../../components/ConstrainedWidth';
+
+import theme from '../../config/theme';
 
 import { COLLECTION_PAGE_QUERY } from '../../generated/COLLECTION_PAGE_QUERY';
 
@@ -12,42 +17,64 @@ export default function CollectionPage() {
 	const router = useRouter();
 	const { handle } = router.query;
 
-	const {data, loading, error} = useQuery<COLLECTION_PAGE_QUERY>(COLLECTION_PAGE_GQL_QUERY, {
+	const result = useQuery<COLLECTION_PAGE_QUERY>(COLLECTION_PAGE_GQL_QUERY, {
 		variables: {
 			handle
 		}
 	});
 
-	if (loading) {
-		return <div>Loading...</div>;
-	}
-	if (error) {
-		console.log(error);
-		return <div>Error</div>;
-	}
 
-	if( !data || !data.collectionByHandle) {
-		return null;
-	}
-
-	const { collectionByHandle:values } = data;
+	const values = result?.data?.collectionByHandle!;
 
 	return (
-		<div>
-			<h1>{values.title}</h1>
-			<h2>{values.description}</h2>
-			<Hero image={values.image?.originalSrc!}>
-				<h2>{values.title}</h2>
-				<h3>{values.description}</h3>
-			</Hero>
+		<Test result={result}>
+			{()=>(
+					<>
+						<Hero image={values.image?.originalSrc!}>
+							<StyledHeroChild>
+								<div>
+									<h1>{values.title}</h1>
+									<i>{values.description}</i>
+								</div>
+							</StyledHeroChild>
+						</Hero>
 
-			<ProductList products={values.products.edges} style={{marginTop: 20}} />
-		</div>
+						<StyledConstrainedWidth>
+							<ProductList products={values.products.edges} />
+						</StyledConstrainedWidth>
+					</>
+			)}
+		</Test>
+	);
+}
+
+const StyledConstrainedWidth = styled(ConstrainedWidth)`
+	margin-top: ${theme.dimensions['4']};
+`;
+
+
+function Test(props:{result:QueryResult; children:(data:any) => ReactNode;}){
+	const {result, children} =  props;
+	const {loading, error, data} = result;
+
+	return (
+		<Layout marginTop={false}>
+			{loading
+				? (
+					<div>Loading...</div>
+				)
+				: error ? (
+					<div>Error</div>
+				) : data && (
+					<>{children(data)}</>
+				)
+			}
+		</Layout>
 	);
 }
 
 const COLLECTION_PAGE_GQL_QUERY = gql`
-    query COLLECTION_PAGE_QUERY($handle:String!) {
+    query COLLECTION_PAGE_QUERY($handle: String!) {
         collectionByHandle(handle: $handle) {
             title
             description
@@ -67,7 +94,7 @@ const COLLECTION_PAGE_GQL_QUERY = gql`
                                 amount
                             }
                         }
-                        images(first:20) {
+                        images(first: 20) {
                             edges {
                                 node {
                                     originalSrc
@@ -90,4 +117,26 @@ const COLLECTION_PAGE_GQL_QUERY = gql`
             }
         }
     }
+`;
+
+const StyledHeroChild = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	color: white;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.5);
+	
+	h1 {
+		font-size: ${theme.text['6xl']};
+		font-weight: 100;
+		text-transform: uppercase;
+		letter-spacing: 6px;
+	}
+	
+	i {
+		color: ${theme.colors.gray_400}
+	}
 `;

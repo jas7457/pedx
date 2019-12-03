@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
-export default function ContrainedWidth({ children }: { children: JSX.Element }) {
-	return <StyledConstrainedWidth>{children}</StyledConstrainedWidth>;
+export default function ConstrainedWidth(props: ContrainedWithProps) {
+	const { children, className } = props;
+	return <StyledConstrainedWidth className={className}>{children}</StyledConstrainedWidth>;
 }
 
 const StyledConstrainedWidth = styled.div`
@@ -10,3 +11,8 @@ const StyledConstrainedWidth = styled.div`
 	max-width: 1280px;
 	margin: 0 auto;
 `;
+
+interface ContrainedWithProps {
+	children: ReactNode;
+	className?: string;
+}

@@ -2,51 +2,27 @@ import React from 'react';
 import styled from 'styled-components';
 
 import CollectionGrid from '../components/CollectionGrid';
-import Header from '../components/Header';
-import ContrainedWidth from '../components/ConstrainedWidth';
+import ConstrainedWidth from '../components/ConstrainedWidth';
+import Layout from '../components/Layout';
+import BackgroundImage from '../components/BackgroundImage';
 
 export default function Index() {
 	return (
-		<>
-			<Parallax style={{ backgroundImage: `url('/background.jpg')` }}>
-				<Header />
-				<div className="brand">
-					<div className="letter-spacing">Pedestrian</div>
-				</div>
-			</Parallax>
-			<ContrainedWidth>
-				<main>
-					<CollectionGrid />
-				</main>
-			</ContrainedWidth>
-		</>
+		<StyledLayout marginTop={false}>
+			<BackgroundImage image="/background.jpg" className="background-image" />
+
+			<h1 className="text-primary-main">Collections</h1>
+
+			<ConstrainedWidth>
+				<CollectionGrid />
+			</ConstrainedWidth>
+		</StyledLayout>
 	);
 }
 
-const Parallax = styled.div`
-	position: relative;
-	height: 100vh;
-	width: 100%;
-	background-size: cover;
-	background-position: center;
-	background-attachment: fixed;
-	background-color: black;
-
-	.brand {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translateX(-50%) translateY(-50%);
-		color: white;
-		font-size: 22px;
-		font-weight: 100;
-		text-transform: uppercase;
-		background-color: rgb(85, 85, 85, 0.4);
-		padding: 10px;
-	}
-
-	.letter-spacing {
-		letter-spacing: 14px;
-		margin-right: -14px;
+const StyledLayout = styled(Layout)`
+	.background-image {
+		height: 100vh;
+		background-attachment: fixed;
 	}
 `;

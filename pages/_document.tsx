@@ -8,7 +8,6 @@ export default class MyDocument extends Document {
 		// @ts-ignore
 		const page = renderPage(App => props => sheet.collectStyles(<App {...props} />));
 		const styleTags = sheet.getStyleElement();
-		debugger;
 		return { ...page, styleTags };
 	}
 
@@ -20,8 +19,8 @@ export default class MyDocument extends Document {
 			<html>
 				<Head>
 					<>
-						{styleTags}
 						<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+						{styleTags}
 					</>
 				</Head>
 

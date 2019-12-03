@@ -1,35 +1,30 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
 export default function BackgroundImage(props: BackgroundImageProps) {
-	const { image, className, paddingBottom, children } = props;
+	const { image, className, children } = props;
 	return (
-		<StyledBackgroundImage
-			className={className}
-			paddingBottom={paddingBottom}
-			style={{ backgroundImage: `url(${image})` }}
-		>
-			{children}
+		<StyledBackgroundImage className={className} style={{ backgroundImage: `url(${image})` }}>
+			<div className="children">{children}</div>
 		</StyledBackgroundImage>
 	);
 }
 
-interface BackgroundImageProps {
-	image: string;
-	children?: JSX.Element;
-	paddingBottom: string;
-	className?: string;
-}
-
-const StyledBackgroundImage = styled.div<{ paddingBottom: string }>`
+const StyledBackgroundImage = styled.div`
 	position: relative;
 	background-size: cover;
 	background-position: center;
 	width: 100%;
 
-	&:after {
-		content: '';
-		display: block;
-		padding-bottom: ${props => props.paddingBottom};
+	.children {
+		position: absolute;
+		height: 100%;
+		width: 100%;
 	}
 `;
+
+export interface BackgroundImageProps {
+	image: string;
+	children?: ReactNode;
+	className?: string;
+}

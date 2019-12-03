@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import Link from 'next/link';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+
+import theme from '../config/theme';
 
 function ThemeButton(props: ThemeButtonProps) {
 	const { children, onClick, href, className } = props;
@@ -20,24 +22,24 @@ function ThemeButton(props: ThemeButtonProps) {
 	);
 }
 
-interface ThemeButtonProps {
-	children: JSX.Element | string;
-	className?: string;
-	onClick?: () => void;
-	href?: string;
-}
-
 export default styled(ThemeButton)`
 	display: inline-block;
-	padding: 10px;
+	padding: ${theme.dimensions['2']};
 	background-color: black;
 	color: white;
-	transition: background-color ${props => props.theme.transitionTime};
 	will-change: background-color;
+	transition: background-color ${theme.transitionTime};
 	letter-spacing: 2px;
 
 	&:hover,
 	&:focus {
-		background: ${props => props.theme.colors.primary.main};
+		background-color: ${theme.colors.primary.main};
 	}
 `;
+
+interface ThemeButtonProps {
+	children: ReactNode;
+	className?: string;
+	onClick?: () => void;
+	href?: string;
+}
