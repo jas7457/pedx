@@ -34,6 +34,7 @@
 		"classnames": "^2.2.6",
 		"graphql": "^14.5.8",
 		"graphql-tag": "^2.10.1",
+		"lodash": "^4.17.15",
 		"next": "^9.1.4",
 		"next-with-apollo": "^4.3.0",
 		"node-sass": "^4.13.0",
@@ -46,6 +47,7 @@
 	},
 	"devDependencies": {
 		"@types/classnames": "^2.2.9",
+		"@types/lodash": "^4.14.149",
 		"@types/node": "^12.12.14",
 		"@types/react": "^16.9.13",
 		"@types/styled-components": "^4.4.0",

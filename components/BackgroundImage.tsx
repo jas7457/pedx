@@ -5,7 +5,7 @@ export default function BackgroundImage(props: BackgroundImageProps) {
 	const { image, className, children } = props;
 	return (
 		<StyledBackgroundImage className={className} style={{ backgroundImage: `url(${image})` }}>
-			<div className="children">{children}</div>
+			{children && <div className="children">{children}</div>}
 		</StyledBackgroundImage>
 	);
 }

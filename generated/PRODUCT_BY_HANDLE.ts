@@ -6,6 +6,34 @@
 // GraphQL query operation: PRODUCT_BY_HANDLE
 // ====================================================
 
+export interface PRODUCT_BY_HANDLE_productByHandle_priceRange_minVariantPrice {
+  __typename: "MoneyV2";
+  /**
+   * Decimal money amount.
+   */
+  amount: ShopifyDecimal;
+}
+
+export interface PRODUCT_BY_HANDLE_productByHandle_priceRange_maxVariantPrice {
+  __typename: "MoneyV2";
+  /**
+   * Decimal money amount.
+   */
+  amount: ShopifyDecimal;
+}
+
+export interface PRODUCT_BY_HANDLE_productByHandle_priceRange {
+  __typename: "ProductPriceRange";
+  /**
+   * The lowest variant's price.
+   */
+  minVariantPrice: PRODUCT_BY_HANDLE_productByHandle_priceRange_minVariantPrice;
+  /**
+   * The highest variant's price.
+   */
+  maxVariantPrice: PRODUCT_BY_HANDLE_productByHandle_priceRange_maxVariantPrice;
+}
+
 export interface PRODUCT_BY_HANDLE_productByHandle_images_edges_node {
   __typename: "Image";
   /**
@@ -32,6 +60,26 @@ export interface PRODUCT_BY_HANDLE_productByHandle_images {
   edges: PRODUCT_BY_HANDLE_productByHandle_images_edges[];
 }
 
+export interface PRODUCT_BY_HANDLE_productByHandle_variants_edges_node_selectedOptions {
+  __typename: "SelectedOption";
+  /**
+   * The product option’s name.
+   */
+  name: string;
+  /**
+   * The product option’s value.
+   */
+  value: string;
+}
+
+export interface PRODUCT_BY_HANDLE_productByHandle_variants_edges_node_priceV2 {
+  __typename: "MoneyV2";
+  /**
+   * Decimal money amount.
+   */
+  amount: ShopifyDecimal;
+}
+
 export interface PRODUCT_BY_HANDLE_productByHandle_variants_edges_node_image {
   __typename: "Image";
   /**
@@ -53,9 +101,13 @@ export interface PRODUCT_BY_HANDLE_productByHandle_variants_edges_node {
    */
   title: string;
   /**
-   * Indicates if the product variant is available for sale.
+   * List of product options applied to the variant.
    */
-  availableForSale: boolean;
+  selectedOptions: PRODUCT_BY_HANDLE_productByHandle_variants_edges_node_selectedOptions[];
+  /**
+   * The product variant’s price.
+   */
+  priceV2: PRODUCT_BY_HANDLE_productByHandle_variants_edges_node_priceV2;
   /**
    * Image associated with the product variant. This field falls back to the product image if no image is available.
    */
@@ -64,6 +116,10 @@ export interface PRODUCT_BY_HANDLE_productByHandle_variants_edges_node {
 
 export interface PRODUCT_BY_HANDLE_productByHandle_variants_edges {
   __typename: "ProductVariantEdge";
+  /**
+   * A cursor for use in pagination.
+   */
+  cursor: string;
   /**
    * The item at the end of ProductVariantEdge.
    */
@@ -89,9 +145,17 @@ export interface PRODUCT_BY_HANDLE_productByHandle {
    */
   title: string;
   /**
-   * Stripped description of the product, single line with HTML tags removed.
+   * The description of the product, complete with HTML formatting.
    */
-  description: string;
+  descriptionHtml: ShopifyHTML;
+  /**
+   * A categorization that a product can be tagged with, commonly used for filtering and searching.
+   */
+  productType: string;
+  /**
+   * The price range.
+   */
+  priceRange: PRODUCT_BY_HANDLE_productByHandle_priceRange;
   /**
    * List of images associated with the product.
    */

@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import ScaledBackgroundImage from './ScaledBackgroundImage';
 import ThemeButton from './ThemeButton';
+import GraphQL from './GraphQL';
 
 import theme from '../config/theme';
 
@@ -15,33 +16,32 @@ import {
 } from '../generated/COLLECTION_GRID_QUERY';
 
 export default function CollectionGrid() {
-	const { data, loading, error } = useQuery<COLLECTION_GRID_QUERY>(COLLECTION_GRID_GQL_QUERY);
-	if (loading) {
-		return <div>Loading...</div>;
-	}
-	if (error) {
-		console.log(error);
-		return <div>Error</div>;
-	}
-
-	if (!data) {
-		return null;
-	}
+	const result = useQuery<COLLECTION_GRID_QUERY>(COLLECTION_GRID_GQL_QUERY);
+	const data = result.data!;
 
 	return (
-		<StyledCollectionGrid>
-			{data.collections.edges.map(product => (
-				<CollectionGridItem key={product.node.id} {...product.node} />
-			))}
-		</StyledCollectionGrid>
+		<GraphQL result={result}>
+			{() => {
+				return (
+					<StyledCollectionGrid>
+						{data.collections.edges.map(product => (
+							<CollectionGridItem key={product.node.id} {...product.node} />
+						))}
+					</StyledCollectionGrid>
+				);
+			}}
+		</GraphQL>
 	);
 }
 
 const StyledCollectionGrid = styled.div`
 	display: flex;
 	flex-wrap: wrap;
-	max-height: 100vh;
 	height: 800px;
+
+	@media (min-width: ${theme.breakpoints.tablet}) {
+		max-height: 100vh;
+	}
 `;
 
 function CollectionGridItem(props: COLLECTION_GRID_QUERY_collections_edges_node) {
@@ -53,7 +53,7 @@ function CollectionGridItem(props: COLLECTION_GRID_QUERY_collections_edges_node)
 
 			<Link href={`/collections/[handle]`} as={`collections/${handle}`}>
 				<a className="anchor">
-					<ThemeButton className="theme-button">{`Shop ${title}`}</ThemeButton>
+					<ThemeButton className="theme-button" inverse>{`Shop ${title}`}</ThemeButton>
 				</a>
 			</Link>
 		</StyledCollectionGridItem>

@@ -34,7 +34,7 @@ export default function SidebarNav(props: SidebarNavProps) {
 					<FontAwesomeIcon icon={faTimes} />
 				</button>
 
-				<ul className="list-none">
+				<ul className="list-reset">
 					{links.map(link => {
 						return (
 							<li key={link.href}>
