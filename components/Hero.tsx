@@ -15,6 +15,7 @@ export default function Hero(props: HeroProps) {
 
 const StyledBackgroundImage = styled(BackgroundImage)`
 	max-height: 80vh;
+	min-height: 60vh;
 
 	&:after {
 		content: '';

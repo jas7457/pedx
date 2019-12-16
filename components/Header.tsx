@@ -7,42 +7,39 @@ import { faBars, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 // components
 import SidebarNav from './SidebarNav';
+import Cart from './Cart';
 
 import theme from '../config/theme';
 
 export default function Header() {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+	const [isCartOpen, setIsCartOpen] = useState(false);
 
 	return (
-		<StyledHeader>
-			<button className="clickable left" onClick={() => setIsSidebarOpen(isOpen => !isOpen)}>
+		<StyledHeader className="flex">
+			<button className="clickable flex-shrink-none" onClick={() => setIsSidebarOpen(isOpen => !isOpen)}>
 				<FontAwesomeIcon icon={faBars} />
 			</button>
 
-			<div className="center">
+			<div className="center flex-grow flex-shrink-none">
 				<Link href="/">
 					<a className="clickable">pedestrian</a>
 				</Link>
 			</div>
 
-			<div className="right">
-				<button className="clickable login-button" onClick={() => alert('Not yet implemented')}>
-					Login
-				</button>
-
-				<button className="clickable" onClick={() => alert('Not yet implemented')}>
-					<FontAwesomeIcon icon={faShoppingCart} />
-				</button>
-			</div>
+			<button className="clickable flex-shrink-none" onClick={() => setIsCartOpen(!isCartOpen)}>
+				<FontAwesomeIcon icon={faShoppingCart} />
+			</button>
 
 			<SidebarNav isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+
+			<Cart isOpen={isCartOpen} handleClose={() => setIsCartOpen(false)} />
 		</StyledHeader>
 	);
 }
 
 const StyledHeader = styled.header`
 	position: fixed;
-	display: flex;
 	top: 0;
 	padding: ${theme.dimensions['4']};
 	height: ${theme.dimensions['10']};
@@ -61,26 +58,10 @@ const StyledHeader = styled.header`
 		}
 	}
 
-	.left {
-		flex-shrink: 0;
-	}
-
 	.center {
-		flex-shrink: 1;
-		flex-grow: 1;
 		text-align: center;
 		font-size: ${theme.text['2xl']};
 		text-transform: uppercase;
 		letter-spacing: 12px;
-	}
-
-	.right {
-		display: flex;
-		align-items: center;
-		flex-shrink: 0;
-	}
-
-	.login-button {
-		margin-right: ${theme.dimensions['2']};
 	}
 `;

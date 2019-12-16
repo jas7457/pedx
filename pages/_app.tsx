@@ -4,6 +4,8 @@ import { ApolloProvider } from 'react-apollo';
 import withApollo, { InitApolloOptions } from 'next-with-apollo';
 import ApolloClient, { Operation } from 'apollo-boost';
 
+import Layout from '../components/Layout';
+
 import { SHOPIFY_GRAPHQL_ENDPOINT, SHOPIFY_STOREFRONT_ACCESS_TOKEN } from '../config/variables';
 
 import '../assets/styles/main.scss';
@@ -25,10 +27,14 @@ class MyApp extends App {
 	public render() {
 		// @ts-ignore
 		const { Component, apollo, pageProps } = this.props;
+		// @ts-ignore
+		const { marginTop = true } = Component;
 
 		return (
 			<ApolloProvider client={apollo}>
-				<Component {...pageProps} />
+				<Layout marginTop={marginTop}>
+					<Component {...pageProps} />
+				</Layout>
 			</ApolloProvider>
 		);
 	}
@@ -37,7 +43,6 @@ class MyApp extends App {
 export default withApollo(({ headers }: InitApolloOptions<any>) => {
 	return new ApolloClient({
 		uri: SHOPIFY_GRAPHQL_ENDPOINT,
-		fetchOptions: {},
 		request: (operation: Operation) => {
 			operation.setContext({
 				headers: {

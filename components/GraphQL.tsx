@@ -1,17 +1,17 @@
 import React, { ReactNode } from 'react';
 import { QueryResult } from 'react-apollo';
 
-export default function GraphQL(props: GraphQLProps) {
+export default function GraphQL<TData = any>(props: GraphQLProps<TData>) {
 	const { result, children } = props;
 	const { loading, error, data } = result;
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return <>Loading...</>;
 	}
-	return <>{error ? <div>Error</div> : data && <>{children(data)}</>}</>;
+	return <>{error ? <>Error</> : data && <>{children(data)}</>}</>;
 }
 
-interface GraphQLProps {
-	result: QueryResult;
-	children: (data: any) => ReactNode;
+interface GraphQLProps<TData> {
+	result: QueryResult<TData>;
+	children: (data: TData) => ReactNode;
 }

@@ -2,10 +2,11 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import classNames from 'classnames';
-// @ts-ignore
-import Fade from 'react-reveal/fade';
+import { useSpring, animated } from 'react-spring';
 
 import ScaledBackgroundImage from './ScaledBackgroundImage';
+
+import useIntersectionObserver from '../hooks/useIntersectionObserver';
 
 import dollarize from '../helpers/dollarize';
 import theme from '../config/theme';
@@ -13,34 +14,49 @@ import theme from '../config/theme';
 import { COLLECTION_PAGE_QUERY_collectionByHandle_products_edges } from '../generated/COLLECTION_PAGE_QUERY';
 
 export default function ProductList(props: ProductListProps) {
-	const { products, className } = props;
+	const { products, className, animation } = props;
 
 	return (
 		<StyledProductList className={classNames(className, 'list-reset')}>
-			{products.map(product => {
-				const image = product.node.images.edges[0].node.originalSrc;
-
-				return (
-					<li key={product.node.id}>
-						<Fade>
-							<>
-								<Link href={`/products/${product.node.handle}`}>
-									<a className="anchor" title={`Shop ${product.node.title}`}>
-										<ScaledBackgroundImage className="scaled-background-image" image={image} />
-									</a>
-								</Link>
-								<div className="product-title truncate" title={product.node.title}>
-									{product.node.title}
-								</div>
-								<div className="product-price">
-									{dollarize(product.node.priceRange.minVariantPrice.amount)}
-								</div>
-							</>
-						</Fade>
-					</li>
-				);
-			})}
+			{products.map(product => (
+				<ProductListItem key={product.node.id} product={product} animation={animation} />
+			))}
 		</StyledProductList>
+	);
+}
+
+function ProductListItem(props: {
+	product: COLLECTION_PAGE_QUERY_collectionByHandle_products_edges;
+	animation?: { from: object; to: object };
+}) {
+	const { product, animation } = props;
+	const node = product.node;
+
+	const { ref, isIntersecting } = useIntersectionObserver<HTMLLIElement>();
+
+	const styles = (() => {
+		if (!animation) {
+			return {};
+		}
+
+		return isIntersecting ? animation.to : animation.from;
+	})();
+
+	return (
+		<animated.li key={node.id} ref={ref} style={useSpring(styles)}>
+			<Link href="/products/[handle]" as={`/products/${node.handle}`}>
+				<a className="anchor" title={`Shop ${node.title}`}>
+					<ScaledBackgroundImage
+						className="scaled-background-image"
+						image={node.images.edges[0].node.originalSrc}
+					/>
+				</a>
+			</Link>
+			<div className="product-title truncate" title={node.title}>
+				{node.title}
+			</div>
+			<div className="product-price">{dollarize(node.priceRange.minVariantPrice.amount)}</div>
+		</animated.li>
 	);
 }
 
@@ -71,7 +87,7 @@ const StyledProductList = styled.ul`
 			width: calc(33.3333% - 13.3333px);
 			margin-right: 20px;
 
-			&:nth-child(3) {
+			&:nth-child(3n) {
 				margin-right: 0;
 			}
 		}
@@ -89,4 +105,5 @@ const StyledProductList = styled.ul`
 interface ProductListProps {
 	products: COLLECTION_PAGE_QUERY_collectionByHandle_products_edges[];
 	className?: string;
+	animation?: { from: object; to: object };
 }

@@ -1,6 +1,5 @@
 import React, { Dispatch, ReactNode, SetStateAction } from 'react';
 import Link from 'next/link';
-import { useSpring, animated } from 'react-spring';
 import styled from 'styled-components';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,7 +13,7 @@ import {
 	faTimes
 } from '@fortawesome/free-solid-svg-icons';
 
-import Overlay from './Overlay';
+import Drawer from './Drawer';
 
 import theme from '../config/theme';
 
@@ -22,24 +21,17 @@ export default function SidebarNav(props: SidebarNavProps) {
 	const { isOpen, setIsSidebarOpen } = props;
 
 	return (
-		<>
-			<Overlay isOpen={isOpen} onClick={() => setIsSidebarOpen(false)} />
-
-			<StyledSidebarNav
-				style={useSpring({
-					transform: isOpen ? 'translateX(0%)' : 'translateX(-100%)'
-				})}
-			>
-				<button className="close-button" onClick={() => setIsSidebarOpen(false)}>
-					<FontAwesomeIcon icon={faTimes} />
-				</button>
-
+		<Drawer isOpen={isOpen} onOverlayClick={() => setIsSidebarOpen(false)} type="primary">
+			<StyledSidebarNav>
 				<ul className="list-reset">
 					{links.map(link => {
 						return (
 							<li key={link.href}>
 								<Link href={link.href}>
-									<a className="link-anchor">
+									<a
+										className="link-anchor flex align-center"
+										onClick={() => setIsSidebarOpen(false)}
+									>
 										<span className="icon">{link.icon}</span>
 										<span>{link.text}</span>
 									</a>
@@ -49,33 +41,11 @@ export default function SidebarNav(props: SidebarNavProps) {
 					})}
 				</ul>
 			</StyledSidebarNav>
-		</>
+		</Drawer>
 	);
 }
 
-const StyledSidebarNav = styled(animated.div)`
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: ${theme.dimensions['20']};
-	height: 100%;
-	z-index: 2;
-	padding: ${theme.dimensions['5']};
-	background-color: ${theme.colors.gray_800};
-	color: white;
-	max-width: 90%;
-
-	.close-button {
-		position: absolute;
-		top: ${theme.dimensions['2']};
-		right: ${theme.dimensions['4']};
-
-		&:hover,
-		&:focus {
-			color: ${theme.colors.primary.main};
-		}
-	}
-
+const StyledSidebarNav = styled.div`
 	ul {
 		li {
 			margin-bottom: ${theme.dimensions['4']};
@@ -83,9 +53,6 @@ const StyledSidebarNav = styled(animated.div)`
 	}
 
 	a.link-anchor {
-		display: flex;
-		align-items: center;
-
 		&:hover,
 		&:focus {
 			color: ${theme.colors.primary.main};

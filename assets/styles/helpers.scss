@@ -8,3 +8,39 @@
 	margin: 0;
 	list-style: none;
 }
+
+.flex {
+	display: flex;
+}
+
+.flex-grow {
+	flex-grow: 1;
+}
+
+.flex-shrink {
+	flex-shrink: 1;
+}
+
+.flex-shrink-none {
+	flex-shrink: 0;
+}
+
+.align-center {
+	align-items: center;
+}
+
+.justify-center {
+	justify-content: center;
+}
+
+.overflow-hidden {
+	overflow: hidden;
+}
+
+.w-full {
+	width: 100%;
+}
+
+.h-full {
+	height: 100%;
+}

@@ -5,11 +5,11 @@ import { useQuery } from 'react-apollo';
 import styled from 'styled-components';
 import classNames from 'classnames';
 
-import Layout from '../../components/Layout';
 import ConstrainedWidth from '../../components/ConstrainedWidth';
 import ScaledBackgroundImage from '../../components/ScaledBackgroundImage';
 import Select from '../../components/Select';
 import GraphQL from '../../components/GraphQL';
+import FadeIn from '../../components/FadeIn';
 
 import dollarize from '../../helpers/dollarize';
 import theme from '../../config/theme';
@@ -34,17 +34,15 @@ export default function ProductPage() {
 	const { data } = result;
 
 	return (
-		<Layout marginTop={true}>
-			<GraphQL result={result}>
-				{() => {
-					if (!data || !data.productByHandle) {
-						return null;
-					}
+		<GraphQL result={result}>
+			{() => {
+				if (!data || !data.productByHandle) {
+					return null;
+				}
 
-					return <ProductDisplay values={data?.productByHandle} />;
-				}}
-			</GraphQL>
-		</Layout>
+				return <ProductDisplay values={data.productByHandle} />;
+			}}
+		</GraphQL>
 	);
 }
 
@@ -120,64 +118,61 @@ function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_productByHandle }) {
 	})!;
 
 	return (
-		<Layout marginTop={true}>
-			<ConstrainedWidth>
-				<StyledProductPage>
-					<div className="left">
+		<ConstrainedWidth>
+			<StyledProductPage>
+				<div className="left">
+					<FadeIn key={selectedVariant?.node.image?.originalSrc}>
 						<img src={selectedVariant?.node.image?.originalSrc} />
+					</FadeIn>
 
-						<VariantSelector
-							variantsByUniqueImages={variantsByUniqueImages}
-							selectedVariant={selectedVariant}
-							handleSelectedVariant={selection => {
-								setState({
-									...state,
-									selection
-								});
-							}}
-						/>
+					<VariantSelector
+						variantsByUniqueImages={variantsByUniqueImages}
+						selectedVariant={selectedVariant}
+						handleSelectedVariant={selection => {
+							setState({
+								...state,
+								selection
+							});
+						}}
+					/>
+				</div>
+
+				<div className="right">
+					<h1 className="product-title">{values.title}</h1>
+					<h2 className="product-description" dangerouslySetInnerHTML={{ __html: values?.descriptionHtml }} />
+
+					<div className="variant-container">
+						{Object.values(variantGroups).map(variantGroup => {
+							return (
+								<div key={variantGroup.name}>
+									<Select
+										options={variantGroup.values.map(val => val.value)}
+										value={selection[variantGroup.name]}
+										label={variantGroup.name}
+										onChange={e => {
+											setState({
+												...state,
+												selection: {
+													...state.selection,
+													[variantGroup.name]: e.target.value
+												}
+											});
+										}}
+									/>
+								</div>
+							);
+						})}
 					</div>
 
-					<div className="right">
-						<h1 className="product-title">{values.title}</h1>
-						<h2
-							className="product-description"
-							dangerouslySetInnerHTML={{ __html: values?.descriptionHtml }}
-						/>
-
-						<div className="variant-container">
-							{Object.values(variantGroups).map(variantGroup => {
-								return (
-									<div>
-										<Select
-											options={variantGroup.values.map(val => val.value)}
-											value={selection[variantGroup.name]}
-											label={variantGroup.name}
-											onChange={e => {
-												setState({
-													...state,
-													selection: {
-														...state.selection,
-														[variantGroup.name]: e.target.value
-													}
-												});
-											}}
-										/>
-									</div>
-								);
-							})}
-						</div>
-
-						<span style={{ display: 'inline-block', margin: '1rem 0.5rem' }}>
-							<i>{dollarize(selectedVariant.node.priceV2.amount)}</i> — {selectedVariant.node.title}
-						</span>
-						<ThemeButton onClick={() => alert('Not yet implemented')} border>
-							Add to Cart
-						</ThemeButton>
-					</div>
-				</StyledProductPage>
-			</ConstrainedWidth>
-		</Layout>
+					<span style={{ display: 'inline-block', margin: '1rem 0.5rem' }}>
+						<i>{dollarize(selectedVariant.node.priceV2.amount)}</i> — {selectedVariant.node.title}
+					</span>
+					<ThemeButton onClick={() => alert('Not yet implemented')} border>
+						Add to Cart
+					</ThemeButton>
+				</div>
+			</StyledProductPage>
+		</ConstrainedWidth>
 	);
 }
 
@@ -185,11 +180,8 @@ const StyledProductPage = styled.div`
 	display: flex;
 	padding-top: ${theme.dimensions['4']};
 	flex-wrap: wrap;
-	flex-flow: column-reverse;
 
 	@media (min-width: ${theme.breakpoints.tablet}) {
-		flex-flow: initial;
-
 		.left {
 			width: 40%;
 		}
@@ -266,7 +258,7 @@ function VariantSelector(props: {
 				});
 
 				return (
-					<li>
+					<li key={variant.node.id}>
 						<button
 							className={classNames('variant-wrapper', { 'is-selected': isSelected })}
 							title={`${variant.node.title} - ${dollarize(variant.node.priceV2.amount)}`}

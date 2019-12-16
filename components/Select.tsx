@@ -15,7 +15,7 @@ export default function Select(props: SelectProps) {
 			)}
 			<StyledSelect value={value} onChange={onChange}>
 				{options.map(option => {
-					return <option>{option}</option>;
+					return <option key={option}>{option}</option>;
 				})}
 			</StyledSelect>
 		</>
@@ -27,6 +27,7 @@ const StyledSelect = styled.select`
 	border: 1px solid ${theme.colors.gray_500};
 	min-height: 30px;
 	padding: ${theme.dimensions['2']};
+	background-color: white;
 `;
 
 interface SelectProps {

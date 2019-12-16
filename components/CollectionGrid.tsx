@@ -7,6 +7,7 @@ import Link from 'next/link';
 import ScaledBackgroundImage from './ScaledBackgroundImage';
 import ThemeButton from './ThemeButton';
 import GraphQL from './GraphQL';
+import FadeIn from './FadeIn';
 
 import theme from '../config/theme';
 
@@ -17,19 +18,16 @@ import {
 
 export default function CollectionGrid() {
 	const result = useQuery<COLLECTION_GRID_QUERY>(COLLECTION_GRID_GQL_QUERY);
-	const data = result.data!;
 
 	return (
 		<GraphQL result={result}>
-			{() => {
-				return (
-					<StyledCollectionGrid>
-						{data.collections.edges.map(product => (
-							<CollectionGridItem key={product.node.id} {...product.node} />
-						))}
-					</StyledCollectionGrid>
-				);
-			}}
+			{data => (
+				<StyledCollectionGrid>
+					{data.collections.edges.map(product => (
+						<CollectionGridItem key={product.node.id} {...product.node} />
+					))}
+				</StyledCollectionGrid>
+			)}
 		</GraphQL>
 	);
 }
@@ -49,13 +47,15 @@ function CollectionGridItem(props: COLLECTION_GRID_QUERY_collections_edges_node)
 
 	return (
 		<StyledCollectionGridItem>
-			<ScaledBackgroundImage className="scaled-background-image" image={image!.originalSrc} />
+			<FadeIn className="fade-in">
+				<ScaledBackgroundImage className="scaled-background-image" image={image!.originalSrc} />
 
-			<Link href={`/collections/[handle]`} as={`collections/${handle}`}>
-				<a className="anchor">
-					<ThemeButton className="theme-button" inverse>{`Shop ${title}`}</ThemeButton>
-				</a>
-			</Link>
+				<Link href={`/collections/[handle]`} as={`collections/${handle}`}>
+					<a className="anchor">
+						<ThemeButton className="theme-button" inverse>{`Shop ${title}`}</ThemeButton>
+					</a>
+				</Link>
+			</FadeIn>
 		</StyledCollectionGridItem>
 	);
 }
@@ -64,9 +64,13 @@ const spacing = 15;
 const StyledCollectionGridItem = styled.div`
 	position: relative;
 	overflow: hidden;
-	background-color: black;
 	width: 100%;
 	height: calc(50% - ${spacing / 2}px);
+
+	.fade-in {
+		height: 100%;
+		width: 100%;
+	}
 
 	.scaled-background-image {
 		height: 100%;

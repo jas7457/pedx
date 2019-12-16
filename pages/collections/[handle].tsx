@@ -4,12 +4,13 @@ import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
 import styled from 'styled-components';
 
-import Layout from '../../components/Layout';
 import ProductList from '../../components/ProductList';
 import Hero from '../../components/Hero';
 import ConstrainedWidth from '../../components/ConstrainedWidth';
 import GraphQL from '../../components/GraphQL';
+import FadeIn from '../../components/FadeIn';
 
+import fadeInTransformUp from '../../animations/fadeInTransformUp';
 import theme from '../../config/theme';
 
 import { COLLECTION_PAGE_QUERY } from '../../generated/COLLECTION_PAGE_QUERY';
@@ -27,28 +28,30 @@ export default function CollectionPage() {
 	const values = result?.data?.collectionByHandle!;
 
 	return (
-		<Layout marginTop={false}>
-			<GraphQL result={result}>
-				{() => (
-					<>
+		<GraphQL result={result}>
+			{() => (
+				<>
+					<FadeIn>
 						<Hero image={values.image?.originalSrc!}>
-							<StyledHeroChild>
-								<div>
+							<StyledHeroChild className="flex align-center justify-center w-full h-full">
+								<div className="w-full">
 									<h1>{values.title}</h1>
 									<i>{values.description}</i>
 								</div>
 							</StyledHeroChild>
 						</Hero>
+					</FadeIn>
 
-						<StyledConstrainedWidth>
-							<ProductList products={values.products.edges} />
-						</StyledConstrainedWidth>
-					</>
-				)}
-			</GraphQL>
-		</Layout>
+					<StyledConstrainedWidth>
+						<ProductList products={values.products.edges} animation={fadeInTransformUp} />
+					</StyledConstrainedWidth>
+				</>
+			)}
+		</GraphQL>
 	);
 }
+
+CollectionPage.marginTop = false;
 
 const StyledConstrainedWidth = styled(ConstrainedWidth)`
 	margin-top: ${theme.dimensions['4']};
@@ -101,20 +104,20 @@ const COLLECTION_PAGE_GQL_QUERY = gql`
 `;
 
 const StyledHeroChild = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100%;
-	width: 100%;
 	color: white;
 	text-align: center;
 	background-color: rgba(0, 0, 0, 0.5);
 
 	h1 {
-		font-size: ${theme.text['6xl']};
+		font-size: ${theme.text['5xl']};
 		font-weight: 100;
 		text-transform: uppercase;
 		letter-spacing: 6px;
+		word-break: break-word;
+		
+		@media(min-width: ${theme.breakpoints.tablet}) {
+			font-size: ${theme.text['6xl']};
+		}
 	}
 
 	i {

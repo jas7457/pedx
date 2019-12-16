@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Layout from '../components/Layout';
+import Shop from '../components/pages/shop/Shop';
 
-export default function Shop() {
-	return <Layout marginTop={true}>The Shop</Layout>;
+export default function ShopPage() {
+	return <Shop />;
 }

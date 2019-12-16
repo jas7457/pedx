@@ -3,24 +3,29 @@ import styled from 'styled-components';
 
 import CollectionGrid from '../components/CollectionGrid';
 import ConstrainedWidth from '../components/ConstrainedWidth';
-import Layout from '../components/Layout';
 import BackgroundImage from '../components/BackgroundImage';
+import Heading from '../components/Heading';
+
+import theme from '../config/theme';
 
 export default function Index() {
 	return (
-		<StyledLayout marginTop={false}>
+		<StyledIndex>
 			<BackgroundImage image="/background.jpg" className="background-image" />
 
-			<h1 className="text-primary-main">Collections</h1>
-
 			<ConstrainedWidth>
+				<Heading as="h2" size="medium">
+					Collections
+				</Heading>
 				<CollectionGrid />
 			</ConstrainedWidth>
-		</StyledLayout>
+		</StyledIndex>
 	);
 }
 
-const StyledLayout = styled(Layout)`
+Index.marginTop = false;
+
+const StyledIndex = styled.div`
 	.background-image {
 		height: 100vh;
 		background-attachment: fixed;
