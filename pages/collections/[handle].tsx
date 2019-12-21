@@ -9,6 +9,7 @@ import Hero from '../../components/Hero';
 import ConstrainedWidth from '../../components/ConstrainedWidth';
 import GraphQL from '../../components/GraphQL';
 import FadeIn from '../../components/FadeIn';
+import FourOhFour from '../../components/FourOhFour';
 
 import fadeInTransformUp from '../../animations/fadeInTransformUp';
 import theme from '../../config/theme';
@@ -25,28 +26,33 @@ export default function CollectionPage() {
 		}
 	});
 
-	const values = result?.data?.collectionByHandle!;
-
 	return (
 		<GraphQL result={result}>
-			{() => (
-				<>
-					<FadeIn>
-						<Hero image={values.image?.originalSrc!}>
-							<StyledHeroChild className="flex align-center justify-center w-full h-full">
-								<div className="w-full">
-									<h1>{values.title}</h1>
-									<i>{values.description}</i>
-								</div>
-							</StyledHeroChild>
-						</Hero>
-					</FadeIn>
+			{data => {
+				const values = data.collectionByHandle;
+				if (!values) {
+					return <FourOhFour />;
+				}
 
-					<StyledConstrainedWidth>
-						<ProductList products={values.products.edges} animation={fadeInTransformUp} />
-					</StyledConstrainedWidth>
-				</>
-			)}
+				return (
+					<>
+						<FadeIn>
+							<Hero image={values.image?.originalSrc!}>
+								<StyledHeroChild className="flex align-center justify-center w-full h-full">
+									<div className="w-full">
+										<h1>{values.title}</h1>
+										<i>{values.description}</i>
+									</div>
+								</StyledHeroChild>
+							</Hero>
+						</FadeIn>
+
+						<StyledConstrainedWidth>
+							<ProductList products={values.products.edges} animation={fadeInTransformUp} />
+						</StyledConstrainedWidth>
+					</>
+				);
+			}}
 		</GraphQL>
 	);
 }
@@ -114,13 +120,13 @@ const StyledHeroChild = styled.div`
 		text-transform: uppercase;
 		letter-spacing: 6px;
 		word-break: break-word;
-		
-		@media(min-width: ${theme.breakpoints.tablet}) {
+
+		@media (min-width: ${theme.breakpoints.tablet}) {
 			font-size: ${theme.text['6xl']};
 		}
 	}
 
 	i {
-		color: ${theme.colors.gray_400};
+		color: ${theme.colors.gray.lighter};
 	}
 `;
