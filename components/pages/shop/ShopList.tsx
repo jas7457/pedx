@@ -12,6 +12,7 @@ import Select from '../../Select';
 
 import fadeIn from '../../../animations/fadeIn';
 
+import { ProductConnectionFragment } from '../../../gql/products';
 import { SHOP_PAGE_PRODUCTS_QUERY } from '../../../generated/SHOP_PAGE_PRODUCTS_QUERY';
 import ShopState, { ShopStateReducerAction, SORTS } from './ShopState';
 import theme from '../../../config/theme';
@@ -22,7 +23,7 @@ export default function ShopList(props: {
 	dispatch: React.Dispatch<ShopStateReducerAction>;
 }) {
 	const { query, sort, dispatch } = props;
-	const { sortKey = '', reverse = false, title = '' } = sort || {};
+	const { sortKey = SORTS[0].sortKey, reverse = false, title = '' } = sort || {};
 
 	const result = useQuery<SHOP_PAGE_PRODUCTS_QUERY>(SHOP_PAGE_PRODUCTS_GQL_QUERY, {
 		variables: {
@@ -109,43 +110,8 @@ const StyledShopList = styled.div`
 const SHOP_PAGE_PRODUCTS_GQL_QUERY = gql`
 	query SHOP_PAGE_PRODUCTS_QUERY($query: String!, $sortKey: ProductSortKeys!, $reverse: Boolean!) {
 		products(first: 30, query: $query, sortKey: $sortKey, reverse: $reverse) {
-			pageInfo {
-				hasNextPage
-				hasPreviousPage
-			}
-			edges {
-				cursor
-				node {
-					id
-					title
-					description
-					handle
-					availableForSale
-					priceRange {
-						minVariantPrice {
-							amount
-						}
-					}
-					images(first: 20) {
-						edges {
-							node {
-								originalSrc
-							}
-						}
-					}
-					variants(first: 20) {
-						edges {
-							node {
-								title
-								id
-								image {
-									originalSrc
-								}
-							}
-						}
-					}
-				}
-			}
+			...ProductConnectionFragment
 		}
 	}
+	${ProductConnectionFragment}
 `;

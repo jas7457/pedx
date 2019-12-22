@@ -14,6 +14,7 @@ import FourOhFour from '../../components/FourOhFour';
 import fadeInTransformUp from '../../animations/fadeInTransformUp';
 import theme from '../../config/theme';
 
+import { ProductConnectionFragment } from '../../gql/products';
 import { COLLECTION_PAGE_QUERY } from '../../generated/COLLECTION_PAGE_QUERY';
 
 export default function CollectionPage() {
@@ -37,14 +38,6 @@ export default function CollectionPage() {
 				return (
 					<StyledCollectionPage>
 						<FadeIn>
-							{/*
-							<Parallax image={values.image?.originalSrc!}>
-								<div className="w-full">
-									<h1>{values.title}</h1>
-									<i>{values.description}</i>
-								</div>
-							</Parallax>
-							*/}
 							<Hero image={values.image?.originalSrc!}>
 								<StyledHeroChild className="flex align-center justify-center w-full h-full">
 									<div className="w-full">
@@ -82,41 +75,11 @@ const COLLECTION_PAGE_GQL_QUERY = gql`
 				originalSrc
 			}
 			products(first: 20) {
-				edges {
-					node {
-						id
-						title
-						description
-						handle
-						availableForSale
-						priceRange {
-							minVariantPrice {
-								amount
-							}
-						}
-						images(first: 20) {
-							edges {
-								node {
-									originalSrc
-								}
-							}
-						}
-						variants(first: 20) {
-							edges {
-								node {
-									title
-									id
-									image {
-										originalSrc
-									}
-								}
-							}
-						}
-					}
-				}
+				...ProductConnectionFragment
 			}
 		}
 	}
+	${ProductConnectionFragment}
 `;
 
 const StyledHeroChild = styled.div`
