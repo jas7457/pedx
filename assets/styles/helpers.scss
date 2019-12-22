@@ -13,6 +13,10 @@
 	display: flex;
 }
 
+.flex-column {
+	flex-direction: column;
+}
+
 .flex-grow {
 	flex-grow: 1;
 }
@@ -43,4 +47,41 @@
 
 .h-full {
 	height: 100%;
+}
+
+.block {
+	display: block;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+.absolute-center {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.ml-auto {
+	margin-left: auto;
+}
+
+.mr-auto {
+	margin-right: auto;
+}
+
+.clickable {
+	will-change: color;
+	transition: color 0.3s;
+
+	&:hover,
+	&:focus {
+		color: #3b7fd3 !important;
+	}
 }

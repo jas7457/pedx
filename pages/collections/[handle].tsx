@@ -35,8 +35,16 @@ export default function CollectionPage() {
 				}
 
 				return (
-					<>
+					<StyledCollectionPage>
 						<FadeIn>
+							{/*
+							<Parallax image={values.image?.originalSrc!}>
+								<div className="w-full">
+									<h1>{values.title}</h1>
+									<i>{values.description}</i>
+								</div>
+							</Parallax>
+							*/}
 							<Hero image={values.image?.originalSrc!}>
 								<StyledHeroChild className="flex align-center justify-center w-full h-full">
 									<div className="w-full">
@@ -50,14 +58,16 @@ export default function CollectionPage() {
 						<StyledConstrainedWidth>
 							<ProductList products={values.products.edges} animation={fadeInTransformUp} />
 						</StyledConstrainedWidth>
-					</>
+					</StyledCollectionPage>
 				);
 			}}
 		</GraphQL>
 	);
 }
 
-CollectionPage.marginTop = false;
+const StyledCollectionPage = styled.div`
+	margin-top: ${`-${theme.headerHeight}`};
+`;
 
 const StyledConstrainedWidth = styled(ConstrainedWidth)`
 	margin-top: ${theme.dimensions['4']};

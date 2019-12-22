@@ -12,7 +12,7 @@ export default function useIntersectionObserver<T extends HTMLElement>(
 	const ref: RefObject<T> = useRef<T>(null);
 
 	useEffect(() => {
-		if (!window.IntersectionObserver) {
+		if (!window || !window.IntersectionObserver) {
 			setIsIntersecting(true);
 			return;
 		}

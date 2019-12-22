@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useReducer } from 'react';
 import { useRouter } from 'next/router';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
@@ -7,23 +7,28 @@ import classNames from 'classnames';
 
 import ConstrainedWidth from '../../components/ConstrainedWidth';
 import ScaledBackgroundImage from '../../components/ScaledBackgroundImage';
-import Select from '../../components/Select';
 import GraphQL from '../../components/GraphQL';
 import FadeIn from '../../components/FadeIn';
+import FourOhFour from '../../components/FourOhFour';
+import ImageMagnifier from '../../components/ImageManifier';
+import ThemeButton from '../../components/ThemeButton';
+import Heading from '../../components/Heading';
+import Select from '../../components/Select';
 
+import { ProductStateReducer } from '../../reducers/ProductState';
 import dollarize from '../../helpers/dollarize';
 import theme from '../../config/theme';
+import { CartContext } from '../../context/CartContext';
 
 import {
 	PRODUCT_BY_HANDLE,
 	PRODUCT_BY_HANDLE_productByHandle,
 	PRODUCT_BY_HANDLE_productByHandle_variants_edges
 } from '../../generated/PRODUCT_BY_HANDLE';
-import ThemeButton from '../../components/ThemeButton';
 
 export default function ProductPage() {
 	const router = useRouter();
-	const { handle } = router.query;
+	const { handle, variantId } = router.query;
 
 	const result = useQuery<PRODUCT_BY_HANDLE>(PRODUCT_BY_HANDLE_QUERY, {
 		variables: {
@@ -31,25 +36,29 @@ export default function ProductPage() {
 		}
 	});
 
-	const { data } = result;
-
 	return (
 		<GraphQL result={result}>
-			{() => {
-				if (!data || !data.productByHandle) {
-					return null;
+			{data => {
+				if (!data.productByHandle) {
+					return <FourOhFour />;
 				}
 
-				return <ProductDisplay values={data.productByHandle} />;
+				return (
+					<ProductDisplay
+						key={`${data.productByHandle.id}.${variantId}`}
+						values={data.productByHandle}
+						variantId={variantId as string}
+					/>
+				);
 			}}
 		</GraphQL>
 	);
 }
 
-function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_productByHandle }) {
-	const { values } = props;
+function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_productByHandle; variantId?: string }) {
+	const { values, variantId } = props;
 
-	const [state, setState] = useState(() => {
+	const [state, dispatch] = useReducer(ProductStateReducer, undefined, () => {
 		const variantsByUniqueImages: Array<{
 			image: string;
 			variants: PRODUCT_BY_HANDLE_productByHandle_variants_edges[];
@@ -63,6 +72,17 @@ function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_productByHandle }) {
 		> = {};
 
 		const selection: Record<string, string> = {};
+
+		// if a specific variant id was passed in, load that
+		if (variantId) {
+			values.variants.edges.forEach(edge => {
+				if (edge.node.id === variantId) {
+					edge.node.selectedOptions.forEach(option => {
+						selection[option.name] = option.value;
+					});
+				}
+			});
+		}
 
 		values.variants.edges.forEach(edge => {
 			const temp: any = { variant: edge };
@@ -105,7 +125,10 @@ function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_productByHandle }) {
 		return {
 			variantGroups,
 			variantsByUniqueImages,
-			selection
+			currentQuantity: 1,
+			selection,
+			adding: false,
+			pending: false
 		};
 	});
 
@@ -117,20 +140,30 @@ function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_productByHandle }) {
 		});
 	})!;
 
+	const { checkout, checkoutLineItemsAdd } = useContext(CartContext);
+
+	useEffect(() => {
+		const id = setTimeout(() => {
+			dispatch({ type: 'SET_PENDING', pending: false });
+		}, 500);
+
+		return () => clearTimeout(id);
+	}, [state.adding, state.pending]);
+
 	return (
 		<ConstrainedWidth>
 			<StyledProductPage>
 				<div className="left">
 					<FadeIn key={selectedVariant?.node.image?.originalSrc}>
-						<img src={selectedVariant?.node.image?.originalSrc} />
+						<ImageMagnifier src={selectedVariant?.node.image?.originalSrc!} />
 					</FadeIn>
 
 					<VariantSelector
 						variantsByUniqueImages={variantsByUniqueImages}
 						selectedVariant={selectedVariant}
 						handleSelectedVariant={selection => {
-							setState({
-								...state,
+							dispatch({
+								type: 'SELECT_VARIANT',
 								selection
 							});
 						}}
@@ -138,36 +171,86 @@ function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_productByHandle }) {
 				</div>
 
 				<div className="right">
-					<h1 className="product-title">{values.title}</h1>
-					<h2 className="product-description" dangerouslySetInnerHTML={{ __html: values?.descriptionHtml }} />
+					<Heading as="h1" size="small" className="product-title">
+						{values.title}
+					</Heading>
 
-					<div className="variant-container">
-						{Object.values(variantGroups).map(variantGroup => {
-							return (
-								<div key={variantGroup.name}>
-									<Select
-										options={variantGroup.values.map(val => val.value)}
-										value={selection[variantGroup.name]}
-										label={variantGroup.name}
-										onChange={e => {
-											setState({
-												...state,
-												selection: {
-													...state.selection,
-													[variantGroup.name]: e.target.value
-												}
-											});
-										}}
-									/>
+					<b className="price">
+						<i>{dollarize(selectedVariant.node.priceV2.amount)}</i>
+					</b>
+
+					<hr />
+
+					{Object.values(variantGroups).map(variantGroup => {
+						return (
+							<div className="variant-selection" key={variantGroup.name}>
+								<label className="flex-shrink-none">
+									<b>{variantGroup.name}</b>
+								</label>
+								<div>
+									{variantGroup.values.map(value => {
+										return (
+											<button
+												key={value.variant.node.id}
+												className={classNames({
+													selected: value.value === selection[variantGroup.name]
+												})}
+												onClick={() => {
+													dispatch({
+														type: 'SELECT_VARIANT',
+														selection: {
+															...state.selection,
+															[variantGroup.name]: value.value
+														}
+													});
+												}}
+											>
+												{value.value}
+											</button>
+										);
+									})}
 								</div>
-							);
-						})}
+							</div>
+						);
+					})}
+
+					<div className="variant-selection">
+						<Select
+							value={`${state.currentQuantity}`}
+							options={Array.from({ length: 20 }, (_, index) => `${index + 1}`)}
+							className="block w-full"
+							label="Qty"
+							onChange={async e => {
+								dispatch({ type: 'SET_CURRENT_QUANTITY', quantity: parseInt(e.target.value) });
+							}}
+						/>
 					</div>
 
-					<span style={{ display: 'inline-block', margin: '1rem 0.5rem' }}>
-						<i>{dollarize(selectedVariant.node.priceV2.amount)}</i> — {selectedVariant.node.title}
-					</span>
-					<ThemeButton onClick={() => alert('Not yet implemented')} border>
+					<hr />
+
+					<div
+						className="product-description"
+						dangerouslySetInnerHTML={{ __html: values?.descriptionHtml }}
+					/>
+
+					<ThemeButton
+						className="block w-full"
+						onClick={async () => {
+							dispatch({ type: 'SET_PENDING', pending: true });
+							dispatch({ type: 'SET_ADDING', adding: true });
+
+							await checkoutLineItemsAdd({
+								checkoutId: checkout?.id!,
+								lineItems: [{ variantId: selectedVariant.node.id, quantity: state.currentQuantity }]
+							});
+
+							dispatch({ type: 'SET_ADDING', adding: false });
+							dispatch({ type: 'SET_CURRENT_QUANTITY', quantity: 1 });
+						}}
+						border
+						inverse
+						disabled={state.adding || state.pending}
+					>
 						Add to Cart
 					</ThemeButton>
 				</div>
@@ -177,16 +260,20 @@ function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_productByHandle }) {
 }
 
 const StyledProductPage = styled.div`
-	display: flex;
 	padding-top: ${theme.dimensions['4']};
-	flex-wrap: wrap;
 
 	@media (min-width: ${theme.breakpoints.tablet}) {
+		display: flex;
+		flex-wrap: wrap;
+
 		.left {
 			width: 40%;
 		}
 
 		.right {
+			position: sticky;
+			height: 100%;
+			top: 5rem;
 			width: 60%;
 			padding: 0 ${theme.dimensions['6']};
 		}
@@ -200,39 +287,73 @@ const StyledProductPage = styled.div`
 		}
 	}
 
-	.right {
-		.product-title {
-			font-size: ${theme.text['3xl']};
-			margin-bottom: ${theme.dimensions['2']};
-		}
-
-		.product-description {
-			font-size: ${theme.text.md};
-		}
-
-		.selected-variant {
-			margin-top: ${theme.dimensions['4']};
-		}
+	.selected-variant {
+		margin-top: ${theme.dimensions['4']};
 	}
 
-	.variant-container {
-		display: flex;
-		flex-wrap: wrap;
-		margin-top: ${theme.dimensions['4']};
+	.product-title {
+		letter-spacing: 1px;
+	}
 
-		& > * {
-			width: 100%;
-			padding: ${theme.dimensions['2']};
-		}
+	.product-description {
+		margin-bottom: ${theme.dimensions['4']};
+	}
 
-		@media (min-width: ${theme.breakpoints.tablet}) {
-			& > * {
-				width: 50%;
+	.price {
+		color: black;
+		font-size: ${theme.text['2xl']};
+	}
+
+	hr {
+		height: 1px;
+		color: ${theme.colors.gray.lighter};
+		margin: ${theme.dimensions['2']} 0;
+	}
+
+	.variant-selection {
+		margin-bottom: ${theme.dimensions['4']};
+
+		button {
+			padding: 0.4rem 0.8rem;
+			position: relative;
+			min-width: 4rem;
+			letter-spacing: 1px;
+
+			&:after {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				width: 0;
+				height: 1px;
+				background-color: black;
+				transform: translateX(-50%);
+				will-change: width;
+				transition-duration: ${theme.transitionTime};
+			}
+
+			&:hover,
+			&:focus {
+				&:after {
+					width: 85%;
+				}
+			}
+
+			&.selected {
+				background-color: black;
+				color: white;
+			}
+
+			& + button {
+				margin-left: ${theme.dimensions['2']};
 			}
 		}
 
-		label {
-			display: block;
+		.color-swatch {
+			height: 50px;
+			width: 50px;
+			border-radius: 100%;
+			border: 1px solid ${theme.colors.gray.lighter};
 		}
 	}
 `;
@@ -289,7 +410,7 @@ const StyledVariantList = styled.ul`
 		padding: 2px;
 		
 		&.is-selected, &:hover, &:focus {
-			border-color: ${theme.colors.gray_700};
+			border-color: ${theme.colors.gray.darker};
 		}
 		
 		& > div {
@@ -306,7 +427,8 @@ const StyledVariantList = styled.ul`
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
-		background-color: ${theme.colors.gray_300};
+		background-color: ${theme.colors.gray.lightest};
+		background-color: ${theme.colors.gray.lightest};
 	}
 	
 	.variant-title {

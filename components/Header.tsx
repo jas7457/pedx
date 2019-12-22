@@ -1,39 +1,64 @@
 // library
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { config } from 'react-spring';
 
 // components
 import SidebarNav from './SidebarNav';
-import Cart from './Cart';
+import Cart from './cart/Cart';
+import Animation from './Animation';
 
+import { CartContext } from '../context/CartContext';
+import scaleToOne from '../animations/scaleToOne';
 import theme from '../config/theme';
 
 export default function Header() {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-	const [isCartOpen, setIsCartOpen] = useState(false);
+	const { setIsCartOpen, checkout } = useContext(CartContext);
+
+	const cartTotal = checkout
+		? checkout.lineItems.edges.reduce((accum, current) => accum + current.node.quantity, 0)
+		: 0;
 
 	return (
 		<StyledHeader className="flex">
-			<button className="clickable flex-shrink-none" onClick={() => setIsSidebarOpen(isOpen => !isOpen)}>
+			<button
+				className="flex-shrink-none clickable"
+				aria-label="Main Menu"
+				onClick={() => setIsSidebarOpen(isOpen => !isOpen)}
+			>
 				<FontAwesomeIcon icon={faBars} />
 			</button>
 
 			<div className="center flex-grow flex-shrink-none">
 				<Link href="/">
-					<a className="clickable">pedestrian</a>
+					<a>pedestrian</a>
 				</Link>
 			</div>
 
-			<button className="clickable flex-shrink-none" onClick={() => setIsCartOpen(!isCartOpen)}>
+			<button
+				className="shopping-button flex-shrink-none clickable"
+				aria-label="Shopping Cart"
+				onClick={() => setIsCartOpen(true)}
+			>
 				<FontAwesomeIcon icon={faShoppingCart} />
+				{cartTotal > 0 && (
+					<Animation
+						className="shopping-count flex align-center justify-center"
+						config={config.wobbly}
+						animation={scaleToOne}
+					>
+						{cartTotal}
+					</Animation>
+				)}
 			</button>
 
 			<SidebarNav isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
-			<Cart isOpen={isCartOpen} handleClose={() => setIsCartOpen(false)} />
+			<Cart />
 		</StyledHeader>
 	);
 }
@@ -42,26 +67,34 @@ const StyledHeader = styled.header`
 	position: fixed;
 	top: 0;
 	padding: ${theme.dimensions['4']};
-	height: ${theme.dimensions['10']};
+	height: ${theme.headerHeight};
 	width: 100%;
 	z-index: 2;
 	box-shadow: ${theme.boxShadow.bottom};
 	background-color: rgba(255, 255, 255, 0.9);
-
-	.clickable {
-		color: ${theme.colors.text};
-		will-change: color;
-		transition: color ${theme.transitionTime};
-
-		&:hover {
-			color: ${theme.colors.primary.main};
-		}
-	}
 
 	.center {
 		text-align: center;
 		font-size: ${theme.text['2xl']};
 		text-transform: uppercase;
 		letter-spacing: 12px;
+	}
+
+	.shopping-button {
+		position: relative;
+
+		.shopping-count {
+			position: absolute;
+			top: 0;
+			right: -0.4rem;
+			height: 14px;
+			width: 14px;
+			border-radius: 100%;
+			overflow: hidden;
+			border: 1px solid black;
+			background-color: white;
+			font-size: 0.5rem;
+			font-weight: 600;
+		}
 	}
 `;

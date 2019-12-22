@@ -5,6 +5,7 @@ import withApollo, { InitApolloOptions } from 'next-with-apollo';
 import ApolloClient, { Operation } from 'apollo-boost';
 
 import Layout from '../components/Layout';
+import CartProvider from '../context/CartContext';
 
 import { SHOPIFY_GRAPHQL_ENDPOINT, SHOPIFY_STOREFRONT_ACCESS_TOKEN } from '../config/variables';
 
@@ -27,14 +28,14 @@ class MyApp extends App {
 	public render() {
 		// @ts-ignore
 		const { Component, apollo, pageProps } = this.props;
-		// @ts-ignore
-		const { marginTop = true } = Component;
 
 		return (
 			<ApolloProvider client={apollo}>
-				<Layout marginTop={marginTop}>
-					<Component {...pageProps} />
-				</Layout>
+				<CartProvider>
+					<Layout>
+						<Component {...pageProps} />
+					</Layout>
+				</CartProvider>
 			</ApolloProvider>
 		);
 	}

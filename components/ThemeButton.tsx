@@ -6,7 +6,15 @@ import classNames from 'classnames';
 import theme from '../config/theme';
 
 function ThemeButton(props: ThemeButtonProps) {
-	const { children, onClick, href, className: propClassName, inverse = false, border } = props;
+	const {
+		children,
+		onClick,
+		href,
+		className: propClassName,
+		inverse = false,
+		border = false,
+		disabled = false
+	} = props;
 
 	const className = classNames(propClassName, { inverse, border });
 
@@ -19,7 +27,7 @@ function ThemeButton(props: ThemeButtonProps) {
 	}
 
 	return (
-		<button className={className} onClick={onClick}>
+		<button className={className} onClick={onClick} disabled={disabled}>
 			{children}
 		</button>
 	);
@@ -28,29 +36,42 @@ function ThemeButton(props: ThemeButtonProps) {
 export default styled(ThemeButton)`
 	display: inline-block;
 	padding: ${theme.dimensions['2']};
-	background-color: white;
-	color: black;
-	will-change: background-color;
-	transition-property: background-color, color;
+	background-color: black;
+	color: white;
+	will-change: background-color, color, border-color;
+	transition-property: background-color, color, border-color;
 	transition-duration: ${theme.transitionTime};
 	letter-spacing: 2px;
+	text-transform: uppercase;
+	min-width: 90px;
 
 	&.border {
-		border: 1px solid black;
+		border: 2px solid black;
 	}
 
 	&.inverse {
-		background-color: black;
-		color: white;
+		background-color: white;
+		color: black;
 	}
 
 	&:hover,
 	&:focus {
-		background-color: ${theme.colors.primary.main};
-		color: white;
+		background-color: #3b7fd3;
+		border-color: transparent;
 
 		&.inverse {
-			background-color: ${theme.colors.primary.main};
+			background-color: black;
+			color: white;
+		}
+	}
+
+	&[disabled] {
+		background-color: ${theme.colors.gray.lighter} !important;
+		color: ${theme.colors.gray.lightest} !important;
+		pointer-events: none !important;
+
+		&.border {
+			border-color: transparent !important;
 		}
 	}
 `;
@@ -58,8 +79,9 @@ export default styled(ThemeButton)`
 interface ThemeButtonProps {
 	children: ReactNode;
 	className?: string;
-	onClick?: () => void;
+	onClick?: React.MouseEventHandler<HTMLButtonElement>;
 	href?: string;
 	inverse?: boolean;
 	border?: boolean;
+	disabled?: boolean;
 }

@@ -13,6 +13,7 @@ import ShopState, { ShopStateReducerAction, SORTS } from './ShopState';
 import theme from '../../../config/theme';
 
 import { SHOP_FILTER_QUERY } from '../../../generated/SHOP_FILTER_QUERY';
+import classNames from 'classnames';
 
 export default function ShopFilter(props: {
 	state: ShopState | null;
@@ -30,7 +31,7 @@ export default function ShopFilter(props: {
 				if (!state) {
 					const initState: ShopState = {
 						sort: SORTS[0],
-						filtersOpen: window.matchMedia(`(min-width: ${theme.breakpoints.tablet})`).matches,
+						filtersOpen: false,
 						filters: [
 							{
 								title: 'Types',
@@ -68,14 +69,15 @@ export default function ShopFilter(props: {
 									<div className="flex align-center">
 										<Heading
 											as="h2"
-											size="small"
+											size="normal"
 											className="filter-heading flex-grow flex-shrink-none"
+											fontWeight={400}
 										>
 											{filter.title}
 										</Heading>
 										{filter.choices.some(choice => choice.selected) && (
 											<button
-												className="clear-filter flex-shrink-none"
+												className="clear-filter flex-shrink-none clickable"
 												onClick={() => {
 													dispatch({
 														type: 'CLEAR_FILTER',
@@ -91,9 +93,13 @@ export default function ShopFilter(props: {
 
 									<ul className="list-reset">
 										{filter.choices.map(choice => (
-											<li className="choice-item" key={choice.title}>
+											<li
+												key={choice.title}
+												className={classNames('choice-item flex align-center clickable', {
+													selected: choice.selected
+												})}
+											>
 												<button
-													className={choice.selected ? 'selected' : undefined}
 													onClick={() => {
 														dispatch({
 															type: 'TOGGLE_SELECTED',
@@ -103,8 +109,9 @@ export default function ShopFilter(props: {
 													}}
 												>
 													<div className="choice-title">{choice.title}</div>
-													<FontAwesomeIcon icon={faCheck} />
 												</button>
+
+												{choice.selected && <FontAwesomeIcon icon={faCheck} />}
 											</li>
 										))}
 									</ul>
@@ -124,40 +131,30 @@ const StyledShopFilter = styled.div`
 			margin-top: ${theme.dimensions['6']};
 		}
 
-		color: ${theme.colors.gray_600};
-	}
-
-	ul {
-		margin-left: ${theme.dimensions['4']};
+		color: ${theme.colors.gray.medium};
 	}
 
 	.filter-heading {
 		color: ${theme.colors.text};
+		text-transform: uppercase;
 	}
 
 	.clear-filter {
 		font-size: ${theme.dimensions['3']};
-		opacity: 0.5;
-
-		&:hover {
-			color: ${theme.colors.primary.main};
-		}
+		margin-left: ${theme.dimensions['2']};
+		color: ${theme.colors.gray.lighter};
 	}
 
 	.choice-item {
+		&.selected {
+			color: ${theme.colors.text};
+		}
+
 		button {
 			width: 100%;
 			display: flex;
 			align-items: center;
 			text-align: left;
-
-			&.selected {
-				color: ${theme.colors.text};
-			}
-
-			&:hover {
-				color: ${theme.colors.primary.main};
-			}
 
 			&.selected {
 				svg {
@@ -173,6 +170,7 @@ const StyledShopFilter = styled.div`
 		.choice-title {
 			margin: 0 ${theme.dimensions['1']};
 			flex: 1 0 auto;
+			font-weight: 100;
 		}
 	}
 `;

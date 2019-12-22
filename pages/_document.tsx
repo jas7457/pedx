@@ -16,10 +16,13 @@ export default class MyDocument extends Document {
 		const { styleTags } = this.props;
 
 		return (
-			<html>
+			<html lang="en">
 				<Head>
 					<>
-						<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+						<link
+							href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap"
+							rel="stylesheet"
+						/>
 						{styleTags}
 					</>
 				</Head>

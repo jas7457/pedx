@@ -5,11 +5,9 @@ import { useSpring, animated } from 'react-spring';
 import Overlay from './Overlay';
 
 import theme from '../config/theme';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 export default function Drawer(props: DrawerProps) {
-	const { isOpen, onOverlayClick, children, type, className, side = 'left' } = props;
+	const { isOpen, onOverlayClick, children, className, side = 'left', wide = false } = props;
 
 	const transform = (() => {
 		if (side === 'left') {
@@ -24,57 +22,40 @@ export default function Drawer(props: DrawerProps) {
 			<Overlay isOpen={isOpen} onClick={() => onOverlayClick()}></Overlay>
 			<StyledOverlayChildren
 				style={useSpring({ transform })}
-				side={side}
-				type={type}
-				isOpen={isOpen}
+				data-side={side}
+				data-is-open={isOpen}
+				data-wide={wide}
+				aria-hidden={!isOpen}
 				className={className}
 			>
-				<>
-					<button className="close-button" onClick={() => onOverlayClick()}>
-						<FontAwesomeIcon icon={faTimes} />
-					</button>
-
-					{children}
-				</>
+				{children}
 			</StyledOverlayChildren>
 		</>
 	);
 }
 
 const StyledOverlayChildren = styled(animated.div)<{
-	type: DrawerProps['type'];
-	isOpen: boolean;
-	side: DrawerProps['side'];
+	'data-is-open': boolean;
+	'data-side': DrawerProps['side'];
+	'data-wide': boolean;
 }>`
 	position: fixed;
-	background: ${props => (props.type === 'primary' ? theme.colors.gray_800 : 'white')};
-	color: ${props => (props.type === 'primary' ? 'white' : theme.colors.text)};
 	width: 75%;
-	max-width: 300px;
-	${props => `${props.side}: 0`};
 	top: 0;
 	bottom: 0;
 	z-index: 2;
-	padding: ${theme.dimensions['4']};
 
-	.close-button {
-		position: absolute;
-		top: 0;
-		right: ${theme.dimensions['1']};
-		padding: ${theme.dimensions['2']};
-
-		&:hover,
-		&:focus {
-			color: ${theme.colors.primary.main};
-		}
-	}
+	background: white;
+	color: ${theme.colors.text};
+	max-width: ${props => (props['data-wide'] ? '600px' : '300px')};
+	${props => `${props['data-side']}: 0`};
 `;
 
 interface DrawerProps {
 	children: React.ReactNode;
 	isOpen: boolean;
 	onOverlayClick: () => void;
-	type: 'primary' | 'secondary';
 	side?: 'left' | 'right';
 	className?: string;
+	wide?: boolean;
 }

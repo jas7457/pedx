@@ -5,11 +5,11 @@ import Main from './Main';
 import Footer from './Footer';
 
 export default function Layout(props: LayoutProps) {
-	const { children, className, marginTop } = props;
+	const { children, className } = props;
 	return (
 		<>
 			<Header />
-			<Main marginTop={marginTop} className={className}>
+			<Main className={className}>
 				{children}
 			</Main>
 			<Footer />
@@ -19,6 +19,5 @@ export default function Layout(props: LayoutProps) {
 
 interface LayoutProps {
 	children: ReactNode;
-	marginTop: boolean;
 	className?: string;
 }

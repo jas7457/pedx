@@ -18,9 +18,13 @@ export default function ProductList(props: ProductListProps) {
 
 	return (
 		<StyledProductList className={classNames(className, 'list-reset')}>
-			{products.map(product => (
-				<ProductListItem key={product.node.id} product={product} animation={animation} />
-			))}
+			{products.length === 0 ? (
+				<>No products found</>
+			) : (
+				products.map(product => (
+					<ProductListItem key={product.node.id} product={product} animation={animation} />
+				))
+			)}
 		</StyledProductList>
 	);
 }
@@ -77,6 +81,7 @@ const StyledProductList = styled.ul`
 			text-transform: uppercase;
 			font-size: ${theme.text.lg};
 			font-weight: 100;
+			letter-spacing: 1px;
 		}
 
 		.product-price {

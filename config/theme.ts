@@ -1,18 +1,13 @@
 export default {
 	colors: {
-		primary: {
-			main: '#337EC4'
-		},
 		text: '#333',
-		gray_100: '#f7fafc',
-		gray_200: '#edf2f7',
-		gray_300: '#e2e8f0',
-		gray_400: '#cbd5e0',
-		gray_500: '#a0aec0',
-		gray_600: '#718096',
-		gray_700: '#4a5568',
-		gray_800: '#2d3748',
-		gray_900: '#1a202c'
+		gray: {
+			lightest: '#eeeeee',
+			lighter: '#cccccc',
+			medium: '#aaaaaa',
+			darker: '#444444',
+			darkest: '#111111'
+		}
 	},
 	backgrounds: {
 		faded_black_dark: 'rgba(0, 0, 0, 0.9)',
@@ -62,9 +57,11 @@ export default {
 	},
 	transitionTime: '0.3s',
 	boxShadow: {
+		all: '0 0 2px rgba(0,0,0,0.3)',
 		bottom: '0 4px 2px -2px rgba(0,0,0,0.2)'
 	},
 	scale: {
 		sm: 1.1
-	}
+	},
+	headerHeight: '4rem'
 } as const;

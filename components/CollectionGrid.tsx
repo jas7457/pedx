@@ -52,7 +52,7 @@ function CollectionGridItem(props: COLLECTION_GRID_QUERY_collections_edges_node)
 
 				<Link href={`/collections/[handle]`} as={`collections/${handle}`}>
 					<a className="anchor">
-						<ThemeButton className="theme-button" inverse>{`Shop ${title}`}</ThemeButton>
+						<ThemeButton className="absolute-center" border>{`Shop ${title}`}</ThemeButton>
 					</a>
 				</Link>
 			</FadeIn>
@@ -66,6 +66,15 @@ const StyledCollectionGridItem = styled.div`
 	overflow: hidden;
 	width: 100%;
 	height: calc(50% - ${spacing / 2}px);
+
+	&:hover {
+		.scaled-background-image {
+			transform: scale(${theme.scale.sm});
+		}
+		.anchor {
+			opacity: 1;
+		}
+	}
 
 	.fade-in {
 		height: 100%;
@@ -87,23 +96,6 @@ const StyledCollectionGridItem = styled.div`
 		will-change: opacity;
 		transition: opacity ${theme.transitionTime};
 		background-color: ${theme.backgrounds.faded_black};
-	}
-
-	.theme-button {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translateX(-50%) translateY(-50%);
-		text-transform: uppercase;
-	}
-
-	&:hover {
-		.scaled-background-image {
-			transform: scale(${theme.scale.sm});
-		}
-		.anchor {
-			opacity: 1;
-		}
 	}
 
 	@media (min-width: ${theme.breakpoints.tablet}) {

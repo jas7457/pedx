@@ -1,24 +1,20 @@
-import React, { useReducer, useState, useEffect } from 'react';
+import React, { useReducer } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 
 import ShopFilter from './ShopFilter';
 import ShopList from './ShopList';
 import ConstrainedWidth from '../../ConstrainedWidth';
-import Overlay from '../../Overlay';
 import Drawer from '../../Drawer';
 
 import ShopState, { ShopStateReducerAction } from './ShopState';
 import theme from '../../../config/theme';
+import useIsMobile from '../../../hooks/useIsMobile';
+import Dialog from '../../Dialog';
 
 export default function Shop() {
 	const [state, dispatch] = useReducer(StateReducer, null);
-	const [isMobile, setIsMobile] = useState(false);
-
-	useEffect(() => {
-		const tablet = window.matchMedia(`(min-width: ${theme.breakpoints.tablet})`);
-		setIsMobile(!tablet.matches);
-	}, []);
+	const isMobile = useIsMobile();
 
 	const query = (() => {
 		if (!state) {
@@ -51,10 +47,11 @@ export default function Shop() {
 						<Drawer
 							isOpen={!!state?.filtersOpen}
 							onOverlayClick={() => dispatch({ type: 'TOGGLE_FILTERS' })}
-							type="secondary"
 							className="overlay-children"
 						>
-							{filter}
+							<Dialog header="Shop Filters" onCloseClick={() => dispatch({ type: 'TOGGLE_FILTERS' })}>
+								{filter}
+							</Dialog>
 						</Drawer>
 					) : (
 						<>{filter}</>
@@ -141,9 +138,9 @@ const StyledShop = styled.div`
 		width: 0;
 		overflow: hidden;
 		max-width: 30%;
-		margin-right: ${theme.dimensions['2']};
 
 		&.is-open {
+			margin-right: ${theme.dimensions['4']};
 			width: 100%;
 		}
 	}

@@ -511,6 +511,8 @@ textarea::placeholder {
 }
 
 button,
+select,
+option,
 [role='button'] {
 	cursor: pointer;
 }

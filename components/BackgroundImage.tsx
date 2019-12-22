@@ -2,9 +2,9 @@ import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
 export default function BackgroundImage(props: BackgroundImageProps) {
-	const { image, className, children } = props;
+	const { image, className, title, children } = props;
 	return (
-		<StyledBackgroundImage className={className} style={{ backgroundImage: `url(${image})` }}>
+		<StyledBackgroundImage className={className} title={title} style={{ backgroundImage: `url(${image})` }}>
 			{children && <div className="children">{children}</div>}
 		</StyledBackgroundImage>
 	);
@@ -27,4 +27,5 @@ export interface BackgroundImageProps {
 	image: string;
 	children?: ReactNode;
 	className?: string;
+	title?: string;
 }

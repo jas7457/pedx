@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import theme from '../config/theme';
 
 export default function Select(props: SelectProps) {
-	const { options, value, onChange, label } = props;
+	const { options, value, onChange, label, disabled = false, className } = props;
 
 	return (
 		<>
@@ -13,7 +13,7 @@ export default function Select(props: SelectProps) {
 					<b>{label}</b>
 				</label>
 			)}
-			<StyledSelect value={value} onChange={onChange}>
+			<StyledSelect value={value} onChange={onChange} disabled={disabled} className={className}>
 				{options.map(option => {
 					return <option key={option}>{option}</option>;
 				})}
@@ -23,16 +23,22 @@ export default function Select(props: SelectProps) {
 }
 
 const StyledSelect = styled.select`
-	width: 100%;
-	border: 1px solid ${theme.colors.gray_500};
+	border: 1px solid black;
 	min-height: 30px;
 	padding: ${theme.dimensions['2']};
 	background-color: white;
+
+	&[disabled] {
+		color: ${theme.colors.gray.lighter};
+		border-color: ${theme.colors.gray.lighter};
+	}
 `;
 
 interface SelectProps {
 	options: string[];
 	value: string;
 	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+	className?: string;
 	label?: string;
+	disabled?: boolean;
 }

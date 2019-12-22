@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
 import styled from 'styled-components';
@@ -13,8 +13,8 @@ import Select from '../../Select';
 import fadeIn from '../../../animations/fadeIn';
 
 import { SHOP_PAGE_PRODUCTS_QUERY } from '../../../generated/SHOP_PAGE_PRODUCTS_QUERY';
-import theme from '../../../config/theme';
 import ShopState, { ShopStateReducerAction, SORTS } from './ShopState';
+import theme from '../../../config/theme';
 
 export default function ShopList(props: {
 	query: string;
@@ -23,11 +23,6 @@ export default function ShopList(props: {
 }) {
 	const { query, sort, dispatch } = props;
 	const { sortKey = '', reverse = false, title = '' } = sort || {};
-
-	const [state, setState] = useState({
-		page: 1,
-		products: []
-	});
 
 	const result = useQuery<SHOP_PAGE_PRODUCTS_QUERY>(SHOP_PAGE_PRODUCTS_GQL_QUERY, {
 		variables: {
@@ -40,7 +35,7 @@ export default function ShopList(props: {
 	return (
 		<StyledShopList>
 			<div className="shop-title-wrapper flex">
-				<Heading as="h1" size="medium" className="shop-title flex-grow">
+				<Heading as="h1" size="medium" className="shop-title flex-grow" fontWeight={100}>
 					Pedx Shop
 				</Heading>
 
@@ -60,7 +55,7 @@ export default function ShopList(props: {
 					/>
 					<button
 						onClick={e => dispatch({ type: 'TOGGLE_FILTERS' })}
-						className="filter-button flex align-center"
+						className="filter-button flex align-center ml-auto"
 					>
 						<b>Filters</b>
 						<FontAwesomeIcon size="sm" icon={faFilter} />
@@ -89,8 +84,8 @@ const StyledShopList = styled.div`
 	}
 
 	.filter-button {
-		b {
-			margin-right: ${theme.dimensions['1']};
+		svg {
+			margin-left: ${theme.dimensions['1']};
 		}
 	}
 
