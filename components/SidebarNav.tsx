@@ -3,15 +3,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-	faHome,
-	faInfoCircle,
-	faStore,
-	faAt,
-	faQuestionCircle,
-	faEye,
-	faTimes
-} from '@fortawesome/free-solid-svg-icons';
+import { faHome, faInfoCircle, faStore, faAt, faQuestionCircle, faEye } from '@fortawesome/free-solid-svg-icons';
 
 import Drawer from './Drawer';
 import Dialog from './Dialog';

@@ -13,7 +13,7 @@ import ThemeButton from '../ThemeButton';
 import Select from '../Select';
 import Link from 'next/link';
 
-export default function Cart(props: CartProps) {
+export default function Cart() {
 	const { checkout, checkoutLineItemsRemove, checkoutLineItemsUpdate, isCartOpen, setIsCartOpen } = useContext(
 		CartContext
 	);
@@ -213,5 +213,3 @@ const StyledDrawer = styled(Drawer)`
 		}
 	}
 `;
-
-interface CartProps {}

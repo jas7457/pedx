@@ -19,7 +19,7 @@ export default function Drawer(props: DrawerProps) {
 
 	return (
 		<>
-			<Overlay isOpen={isOpen} onClick={() => onOverlayClick()}></Overlay>
+			<Overlay isOpen={isOpen} onClick={() => onOverlayClick()} />
 			<StyledOverlayChildren
 				style={useSpring({ transform })}
 				data-side={side}

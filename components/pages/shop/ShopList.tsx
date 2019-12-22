@@ -54,7 +54,7 @@ export default function ShopList(props: {
 						}}
 					/>
 					<button
-						onClick={e => dispatch({ type: 'TOGGLE_FILTERS' })}
+						onClick={() => dispatch({ type: 'TOGGLE_FILTERS' })}
 						className="filter-button flex align-center ml-auto"
 					>
 						<b>Filters</b>

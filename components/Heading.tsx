@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import theme from '../config/theme';
 
 function Heading(props: HeadingProps) {
-	const { size, as: Tag, children, className } = props;
+	const { as: Tag, children, className } = props;
 
 	return <Tag className={className}>{children}</Tag>;
 }
