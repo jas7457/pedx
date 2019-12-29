@@ -15,13 +15,11 @@ export interface ProductState {
 	currentQuantity: number;
 	selection: Record<string, string>;
 	adding: boolean;
-	pending: boolean;
 }
 
 export type ProductStateReducerAction =
 	| { type: 'SELECT_VARIANT'; selection: ProductState['selection'] }
 	| { type: 'SET_ADDING'; adding: boolean }
-	| { type: 'SET_PENDING'; pending: boolean }
 	| { type: 'SET_CURRENT_QUANTITY'; quantity: number };
 
 export function ProductStateReducer(state: ProductState, action: ProductStateReducerAction): ProductState {
@@ -36,12 +34,6 @@ export function ProductStateReducer(state: ProductState, action: ProductStateRed
 			return {
 				...state,
 				adding: action.adding
-			};
-		}
-		case 'SET_PENDING': {
-			return {
-				...state,
-				pending: action.pending
 			};
 		}
 		case 'SET_CURRENT_QUANTITY': {

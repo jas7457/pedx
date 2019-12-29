@@ -29,6 +29,10 @@
 	flex-shrink: 0;
 }
 
+.flex-wrap {
+	flex-wrap: wrap;
+}
+
 .align-center {
 	align-items: center;
 }
@@ -84,4 +88,24 @@
 	&:focus {
 		color: #3b7fd3 !important;
 	}
+}
+
+.relative {
+	position: relative;
+}
+
+.absolute {
+	position: absolute;
+}
+
+.top-0 {
+	top: 0;
+}
+
+.left-0 {
+	left: 0;
+}
+
+.bottom-0 {
+	bottom: 0;
 }

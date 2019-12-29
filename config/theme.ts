@@ -12,7 +12,7 @@ export default {
 	backgrounds: {
 		faded_black_dark: 'rgba(0, 0, 0, 0.9)',
 		faded_black: 'rgba(0, 0, 0, 0.5)',
-		faded_black_light: 'rgba(0, 0, 0, 0.2)'
+		faded_black_light: 'rgba(0, 0, 0, 0.3)'
 	},
 	breakpoints: {
 		tablet: '600px',

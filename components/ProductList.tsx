@@ -17,7 +17,7 @@ export default function ProductList(props: ProductListProps) {
 	const { products, className, animation } = props;
 
 	return (
-		<StyledProductList className={classNames(className, 'list-reset')}>
+		<StyledProductList className={classNames(className, 'list-reset flex flex-wrap')}>
 			{products.length === 0 ? (
 				<>No products found</>
 			) : (
@@ -65,9 +65,6 @@ function ProductListItem(props: {
 }
 
 const StyledProductList = styled.ul`
-	display: flex;
-	flex-wrap: wrap;
-
 	& > li {
 		width: 100%;
 		margin-bottom: ${theme.dimensions['4']};

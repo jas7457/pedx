@@ -12,17 +12,17 @@ import FadeIn from './FadeIn';
 import theme from '../config/theme';
 
 import {
-	COLLECTION_GRID_QUERY,
-	COLLECTION_GRID_QUERY_collections_edges_node
-} from '../generated/COLLECTION_GRID_QUERY';
+	COLLECTION_GRID_QUERY2,
+	COLLECTION_GRID_QUERY2_collections_edges_node
+} from '../generated/COLLECTION_GRID_QUERY2';
 
 export default function CollectionGrid() {
-	const result = useQuery<COLLECTION_GRID_QUERY>(COLLECTION_GRID_GQL_QUERY);
+	const result = useQuery<COLLECTION_GRID_QUERY2>(COLLECTION_GRID_GQL_QUERY2);
 
 	return (
 		<GraphQL result={result}>
 			{data => (
-				<StyledCollectionGrid>
+				<StyledCollectionGrid className="flex flex-wrap">
 					{data.collections.edges.map(product => (
 						<CollectionGridItem key={product.node.id} {...product.node} />
 					))}
@@ -33,8 +33,6 @@ export default function CollectionGrid() {
 }
 
 const StyledCollectionGrid = styled.div`
-	display: flex;
-	flex-wrap: wrap;
 	height: 800px;
 
 	@media (min-width: ${theme.breakpoints.tablet}) {
@@ -42,7 +40,7 @@ const StyledCollectionGrid = styled.div`
 	}
 `;
 
-function CollectionGridItem(props: COLLECTION_GRID_QUERY_collections_edges_node) {
+function CollectionGridItem(props: COLLECTION_GRID_QUERY2_collections_edges_node) {
 	const { title, description, image, handle } = props;
 
 	return (
@@ -120,8 +118,8 @@ const StyledCollectionGridItem = styled.div`
 	}
 `;
 
-const COLLECTION_GRID_GQL_QUERY = gql`
-	query COLLECTION_GRID_QUERY {
+const COLLECTION_GRID_GQL_QUERY2 = gql`
+	query COLLECTION_GRID_QUERY2 {
 		collections(first: 4) {
 			edges {
 				node {

@@ -9,8 +9,8 @@ export default function Animation(props: AnimationProps) {
 	const { animation, children, className, usingIntersectionObserver = true, config } = props;
 
 	const { ref, isIntersecting } = useIntersectionObserver<HTMLDivElement>({
-		intOptions: {
-			threshold: 0.3
+		intersectionOptions: {
+			threshold: 0.25
 		}
 	});
 

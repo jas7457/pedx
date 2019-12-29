@@ -71,7 +71,7 @@ const StyledHeader = styled.header`
 	width: 100%;
 	z-index: 2;
 	box-shadow: ${theme.boxShadow.bottom};
-	background-color: rgba(255, 255, 255, 0.9);
+	background-color: rgba(255, 255, 255, 0.95);
 
 	.center {
 		text-align: center;

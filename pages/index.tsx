@@ -3,12 +3,15 @@ import styled from 'styled-components';
 import Link from 'next/link';
 
 import CollectionGrid from '../components/CollectionGrid';
-import ConstrainedWidth from '../components/ConstrainedWidth';
+import CollectionGrid2 from '../components/CollectionGrid2';
 import BackgroundImage from '../components/BackgroundImage';
-import Heading from '../components/Heading';
+import ThemeButton from '../components/ThemeButton';
+import SectionTitle from '../components/SectionTitle';
+import PopularProducts from '../components/PopularProducts';
+import RecentlyViewed from '../components/RecentlyViewed';
 
 import theme from '../config/theme';
-import ThemeButton from '../components/ThemeButton';
+import NewProducts from '../components/NewProducts';
 
 export default function Index() {
 	return (
@@ -24,12 +27,17 @@ export default function Index() {
 				</div>
 			</BackgroundImage>
 
-			<ConstrainedWidth>
-				<Heading as="h2" size="medium" fontWeight={100}>
-					Collections
-				</Heading>
-				<CollectionGrid />
-			</ConstrainedWidth>
+			<SectionTitle title="Collections" />
+
+			<CollectionGrid2 />
+
+			<SectionTitle title="What's Popular" />
+			<PopularProducts />
+
+			<SectionTitle title="What's New" />
+			<NewProducts />
+
+			<RecentlyViewed />
 		</StyledIndex>
 	);
 }

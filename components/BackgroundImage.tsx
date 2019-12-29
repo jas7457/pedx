@@ -2,9 +2,14 @@ import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
 export default function BackgroundImage(props: BackgroundImageProps) {
-	const { image, className, title, children } = props;
+	const { image, className, title, children, onClick } = props;
 	return (
-		<StyledBackgroundImage className={className} title={title} style={{ backgroundImage: `url(${image})` }}>
+		<StyledBackgroundImage
+			className={className}
+			title={title}
+			style={{ backgroundImage: `url(${image})` }}
+			onClick={onClick}
+		>
 			{children && <div className="children">{children}</div>}
 		</StyledBackgroundImage>
 	);
@@ -28,4 +33,5 @@ export interface BackgroundImageProps {
 	children?: ReactNode;
 	className?: string;
 	title?: string;
+	onClick?: (e: React.MouseEvent) => void;
 }

@@ -2,11 +2,11 @@ import { useEffect, useState, useRef, RefObject } from 'react';
 
 export default function useIntersectionObserver<T extends HTMLElement>(
 	options: {
-		intOptions?: IntersectionObserverInit;
+		intersectionOptions?: IntersectionObserverInit;
 		disconnectOnIntersect?: boolean;
 	} = {}
 ) {
-	const { intOptions, disconnectOnIntersect = true } = options;
+	const { intersectionOptions, disconnectOnIntersect = true } = options;
 
 	const [isIntersecting, setIsIntersecting] = useState(false);
 	const ref: RefObject<T> = useRef<T>(null);
@@ -25,7 +25,7 @@ export default function useIntersectionObserver<T extends HTMLElement>(
 					observer.disconnect();
 				}
 			});
-		}, intOptions);
+		}, intersectionOptions);
 
 		observer.observe(ref.current as HTMLElement);
 
