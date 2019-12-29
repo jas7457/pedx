@@ -24,7 +24,7 @@ export default function Header() {
 		: 0;
 
 	return (
-		<StyledHeader className="flex">
+		<StyledHeader className="flex w-full">
 			<button
 				className="flex-shrink-none clickable"
 				aria-label="Main Menu"
@@ -68,7 +68,6 @@ const StyledHeader = styled.header`
 	top: 0;
 	padding: ${theme.dimensions['4']};
 	height: ${theme.headerHeight};
-	width: 100%;
 	z-index: 2;
 	box-shadow: ${theme.boxShadow.bottom};
 	background-color: rgba(255, 255, 255, 0.95);

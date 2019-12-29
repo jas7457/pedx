@@ -50,7 +50,7 @@ export default function Slider(props: SliderProps) {
 			{springProps.map(({ x, display, scale }, i) => (
 				<animated.div
 					{...bind()}
-					className="level-1 absolute"
+					className="level-1 absolute h-full"
 					key={i}
 					style={{ display, transform: x.interpolate(x => `translate3d(${x}px,0,0)`) }}
 				>
@@ -83,7 +83,6 @@ const StyledSlider = styled.div`
 
 	.level-1 {
 		width: 60%;
-		height: 100%;
 		will-change: transform;
 		padding: 0 1rem;
 	}

@@ -70,7 +70,7 @@ export default function ShopFilter(props: {
 										<Heading
 											as="h2"
 											size="normal"
-											className="filter-heading flex-grow flex-shrink-none"
+											className="filter-heading flex-grow flex-shrink-none uppercase"
 											fontWeight={400}
 										>
 											{filter.title}
@@ -95,11 +95,12 @@ export default function ShopFilter(props: {
 										{filter.choices.map(choice => (
 											<li
 												key={choice.title}
-												className={classNames('choice-item flex align-center clickable', {
+												className={classNames('choice-item flex align-center', {
 													selected: choice.selected
 												})}
 											>
 												<button
+													className="choice-button flex align-center w-full clickable"
 													onClick={() => {
 														dispatch({
 															type: 'TOGGLE_SELECTED',
@@ -108,10 +109,10 @@ export default function ShopFilter(props: {
 														});
 													}}
 												>
-													<div className="choice-title">{choice.title}</div>
-												</button>
+													{choice.title}
 
-												{choice.selected && <FontAwesomeIcon icon={faCheck} />}
+													{choice.selected && <FontAwesomeIcon icon={faCheck} />}
+												</button>
 											</li>
 										))}
 									</ul>
@@ -136,7 +137,6 @@ const StyledShopFilter = styled.div`
 
 	.filter-heading {
 		color: ${theme.colors.text};
-		text-transform: uppercase;
 	}
 
 	.clear-filter {
@@ -148,30 +148,34 @@ const StyledShopFilter = styled.div`
 	.choice-item {
 		&.selected {
 			color: ${theme.colors.text};
-		}
 
-		button {
-			width: 100%;
-			display: flex;
-			align-items: center;
-			text-align: left;
-
-			&.selected {
+			.choice-button {
 				svg {
 					opacity: 1;
 				}
 			}
+		}
+	}
 
+	.choice-button {
+		text-align: left;
+		justify-content: space-between;
+
+		&.selected {
 			svg {
-				opacity: 0;
+				opacity: 1;
 			}
 		}
 
-		.choice-title {
-			margin: 0 ${theme.dimensions['1']};
-			flex: 1 0 auto;
-			font-weight: 100;
+		svg {
+			opacity: 0;
 		}
+	}
+
+	.choice-title {
+		margin: 0 ${theme.dimensions['1']};
+		flex: 1 0 auto;
+		font-weight: 100;
 	}
 `;
 

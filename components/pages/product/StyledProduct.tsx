@@ -55,7 +55,6 @@ export const StyledProductPage = styled.div`
 
 		button {
 			padding: 0.4rem 0.8rem;
-			position: relative;
 			min-width: 4rem;
 			letter-spacing: 1px;
 

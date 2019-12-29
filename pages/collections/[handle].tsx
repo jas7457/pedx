@@ -40,9 +40,9 @@ export default function CollectionPage() {
 					<StyledCollectionPage>
 						<Animation animation={fadeIn}>
 							<BackgroundImage className="hero" image={values.image?.originalSrc!}>
-								<div className="hero__child flex align-center justify-center w-full h-full">
+								<div className="hero__child flex align-center justify-center w-full h-full white">
 									<div className="w-full">
-										<h1>{values.title}</h1>
+										<h1 className="uppercase">{values.title}</h1>
 										<i>{values.description}</i>
 									</div>
 								</div>
@@ -75,14 +75,12 @@ const StyledCollectionPage = styled.div`
 	}
 
 	.hero__child {
-		color: white;
 		text-align: center;
 		background-color: rgba(0, 0, 0, 0.5);
 
 		h1 {
 			font-size: ${theme.text['5xl']};
 			font-weight: 100;
-			text-transform: uppercase;
 			letter-spacing: 6px;
 			word-break: break-word;
 

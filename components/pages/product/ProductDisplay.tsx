@@ -164,7 +164,7 @@ export default function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_produc
 									return (
 										<button
 											key={value.variant.node.id}
-											className={classNames({
+											className={classNames('relative', {
 												selected: value.value === selection[variantGroup.name]
 											})}
 											onClick={() => {

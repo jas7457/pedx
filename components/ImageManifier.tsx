@@ -10,7 +10,7 @@ export default function ImageMagnifier(props: ImageMagnifierProps) {
 
 	return (
 		<StyledFigure
-			className={classNames({ 'is-enabled': isEnabled })}
+			className={classNames({ 'is-enabled w-full': isEnabled })}
 			onClick={() => setIsEnabled(!isEnabled)}
 			onMouseMove={e => {
 				// @ts-ignore
@@ -27,7 +27,6 @@ export default function ImageMagnifier(props: ImageMagnifierProps) {
 }
 
 const StyledFigure = styled.figure`
-	width: 100%;
 	background-repeat: no-repeat;
 	cursor: zoom-in;
 

@@ -58,7 +58,7 @@ export default function RecentlyViewed() {
 														className="recent-background-image h-full w-full"
 													>
 														<Link href="/products/[handle]" as={`products/${items[index]}`}>
-															<a className="product-link flex align-center justify-center absolute top-0 left-0 w-full h-full overflow-hidden">
+															<a className="product-link flex align-center justify-center absolute top-0 left-0 w-full h-full overflow-hidden white">
 																{data.productByHandle.title}
 															</a>
 														</Link>
@@ -98,7 +98,6 @@ const StyledRecentlyViewed = styled.ol`
 	}
 
 	.product-link {
-		color: white;
 		opacity: 0;
 		will-change: opacity;
 		transition: opacity ${theme.transitionTime};

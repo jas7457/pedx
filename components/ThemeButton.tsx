@@ -16,7 +16,7 @@ function ThemeButton(props: ThemeButtonProps) {
 		disabled = false
 	} = props;
 
-	const className = classNames(propClassName, { inverse, border });
+	const className = classNames(propClassName, 'inline-block uppercase white', { inverse, border });
 
 	if (href) {
 		return (
@@ -34,15 +34,12 @@ function ThemeButton(props: ThemeButtonProps) {
 }
 
 export default styled(ThemeButton)`
-	display: inline-block;
 	padding: ${theme.dimensions['2']};
 	background-color: black;
-	color: white;
 	will-change: background-color, color, border-color;
 	transition-property: background-color, color, border-color;
 	transition-duration: ${theme.transitionTime};
 	letter-spacing: 2px;
-	text-transform: uppercase;
 	min-width: 90px;
 
 	&.border {
