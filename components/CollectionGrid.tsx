@@ -1,125 +1,173 @@
-import React from 'react';
+import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
 import styled from 'styled-components';
 import Link from 'next/link';
+import classNames from 'classnames';
 
 import ScaledBackgroundImage from './ScaledBackgroundImage';
 import ThemeButton from './ThemeButton';
 import GraphQL from './GraphQL';
-import FadeIn from './FadeIn';
+import Animation from './Animation';
+import BackgroundImage from './BackgroundImage';
+import Heading from './Heading';
 
 import theme from '../config/theme';
+import fadeIn from '../animations/fadeIn';
 
-import {
-	COLLECTION_GRID_QUERY2,
-	COLLECTION_GRID_QUERY2_collections_edges_node
-} from '../generated/COLLECTION_GRID_QUERY2';
+import { COLLECTION_GRID_QUERY } from '../generated/COLLECTION_GRID_QUERY';
 
 export default function CollectionGrid() {
-	const result = useQuery<COLLECTION_GRID_QUERY2>(COLLECTION_GRID_GQL_QUERY2);
+	const result = useQuery<COLLECTION_GRID_QUERY>(COLLECTION_GRID_GQL_QUERY);
+	const [selectedIndex, setSelectedIndex] = useState(0);
 
 	return (
 		<GraphQL result={result}>
-			{data => (
-				<StyledCollectionGrid className="flex flex-wrap">
-					{data.collections.edges.map(product => (
-						<CollectionGridItem key={product.node.id} {...product.node} />
-					))}
-				</StyledCollectionGrid>
-			)}
+			{data => {
+				const selectedCollection = data.collections.edges[selectedIndex];
+
+				return (
+					<Animation animation={fadeIn}>
+						<StyledCollectionGrid className="flex overflow-hidden white">
+							<BackgroundImage
+								className="selected-collection flex-shrink-none h-full"
+								image={selectedCollection.node.image!.originalSrc}
+							>
+								<div className="inner flex align-center justify-center flex-column h-full w-full">
+									<Heading
+										as="h1"
+										size="medium"
+										fontWeight={600}
+										className="collection-heading uppercase"
+									>
+										Collections
+									</Heading>
+
+									<div className="explore-collections">
+										<i>Explore our newest collections</i>
+									</div>
+
+									<Link
+										href={`/collections/[handle]`}
+										as={`collections/${selectedCollection.node.handle}`}
+									>
+										<a>
+											<ThemeButton>{`Shop ${selectedCollection.node.title}`}</ThemeButton>
+										</a>
+									</Link>
+								</div>
+							</BackgroundImage>
+
+							<div className="collection-item-wrapper flex flex-wrap flex-shrink-none h-full">
+								{data.collections.edges.map((product, index) => {
+									const { title, description, image, handle } = product.node;
+
+									return (
+										<div
+											className={classNames('collection-item overflow-hidden relative', {
+												'is-selected': index === selectedIndex
+											})}
+											onClick={() => setSelectedIndex(index)}
+										>
+											<ScaledBackgroundImage
+												className="scaled-image w-full h-full"
+												image={image!.originalSrc}
+											/>
+											<div className="collection-name absolute w-full h-full top-0 left-0 flex align-center justify-center uppercase">
+												{product.node.title}
+											</div>
+											>
+										</div>
+									);
+								})}
+							</div>
+						</StyledCollectionGrid>
+					</Animation>
+				);
+			}}
 		</GraphQL>
 	);
 }
 
 const StyledCollectionGrid = styled.div`
-	height: 800px;
+	flex-direction: column;
+	max-height: 75vh;
 
-	@media (min-width: ${theme.breakpoints.tablet}) {
-		max-height: 100vh;
-	}
-`;
-
-function CollectionGridItem(props: COLLECTION_GRID_QUERY2_collections_edges_node) {
-	const { title, description, image, handle } = props;
-
-	return (
-		<StyledCollectionGridItem>
-			<FadeIn className="fade-in">
-				<ScaledBackgroundImage className="scaled-background-image" image={image!.originalSrc} />
-
-				<Link href={`/collections/[handle]`} as={`collections/${handle}`}>
-					<a className="anchor">
-						<ThemeButton className="absolute-center" border>{`Shop ${title}`}</ThemeButton>
-					</a>
-				</Link>
-			</FadeIn>
-		</StyledCollectionGridItem>
-	);
-}
-
-const spacing = 15;
-const StyledCollectionGridItem = styled.div`
-	position: relative;
-	overflow: hidden;
-	width: 100%;
-	height: calc(50% - ${spacing / 2}px);
-
-	&:hover {
-		.scaled-background-image {
-			transform: scale(${theme.scale.sm});
+	.selected-collection {
+		&:after {
+			content: '';
+			display: block;
+			padding-bottom: 75%;
 		}
-		.anchor {
-			opacity: 1;
+
+		.inner {
+			background-color: ${theme.backgrounds.faded_black_light};
 		}
 	}
 
-	.fade-in {
-		height: 100%;
-		width: 100%;
+	.collection-item-wrapper {
+		height: 250px;
+		margin-top: 2px;
 	}
 
-	.scaled-background-image {
-		height: 100%;
+	.explore-collections {
+		margin-bottom: 3rem;
+		color: ${theme.colors.gray.lightest};
 	}
 
-	.anchor {
-		display: block;
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 100%;
-		opacity: 0;
+	.collection-heading {
+		letter-spacing: 4px;
+	}
+
+	.collection-item {
+		width: calc(50% - 1px);
+		height: calc(50% - 1px);
+		cursor: pointer;
+
+		&:nth-child(1) {
+			margin-right: 2px;
+			margin-bottom: 2px;
+		}
+
+		&:nth-child(3) {
+			margin-right: 2px;
+		}
+	}
+
+	.collection-name {
+		opacity: 1;
 		will-change: opacity;
 		transition: opacity ${theme.transitionTime};
-		background-color: ${theme.backgrounds.faded_black};
+		background-color: ${theme.backgrounds.faded_black_light};
+		font-weight: 100;
+		letter-spacing: 1px;
+		font-size: ${theme.text.lg};
+		font-style: italic;
+
+		&:hover,
+		&:focus {
+			opacity: 0;
+		}
 	}
 
 	@media (min-width: ${theme.breakpoints.tablet}) {
-		:nth-child(1) {
-			width: 66%;
-			margin-right: ${spacing}px;
-			margin-bottom: ${spacing}px;
+		flex-direction: row;
+
+		.selected-collection {
+			width: 60%;
 		}
 
-		:nth-child(2) {
-			width: calc(34% - ${spacing}px);
-		}
-
-		:nth-child(3) {
-			width: 34%;
-			margin-right: ${spacing}px;
-		}
-
-		:nth-child(4) {
-			width: calc(66% - ${spacing}px);
+		.collection-item-wrapper {
+			height: auto;
+			width: 40%;
+			margin-top: 0;
+			margin-left: 2px;
 		}
 	}
 `;
 
-const COLLECTION_GRID_GQL_QUERY2 = gql`
-	query COLLECTION_GRID_QUERY2 {
+const COLLECTION_GRID_GQL_QUERY = gql`
+	query COLLECTION_GRID_QUERY {
 		collections(first: 4) {
 			edges {
 				node {

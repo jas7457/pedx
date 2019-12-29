@@ -89,7 +89,7 @@ export default function Cart() {
 													image={item.variant?.image?.src!}
 												>
 													<button
-														className="item-remove clickable"
+														className="item-remove flex absolute clickable"
 														aria-label="Remove Item"
 														title="Remove Item"
 														onClick={async e => {
@@ -103,7 +103,7 @@ export default function Cart() {
 															setIsUpdating(false);
 														}}
 													>
-														<div className="flex align-center justify-center">
+														<div className="flex align-center justify-center overflow-hidden">
 															<FontAwesomeIcon icon={faTimesCircle} />
 														</div>
 													</button>
@@ -119,7 +119,7 @@ export default function Cart() {
 										<div className="flex-shrink-none flex flex-column">
 											<b>{dollarize('' + item.quantity * parseFloat(item.variant?.price!))}</b>
 
-											<div className="item-quantity-wrapper inline-block">
+											<div className="item-quantity-wrapper inline-block overflow-hidden">
 												<Select
 													value={'' + item.quantity}
 													options={Array.from(
@@ -175,8 +175,6 @@ const StyledDrawer = styled(Drawer)`
 	}
 
 	.item-remove {
-		display: flex;
-		position: absolute;
 		top: -10px;
 		left: -10px;
 		font-size: 1rem;
@@ -187,7 +185,6 @@ const StyledDrawer = styled(Drawer)`
 
 		& > * {
 			border-radius: 100%;
-			overflow: hidden;
 			background-color: white;
 			color: black;
 		}
@@ -199,7 +196,6 @@ const StyledDrawer = styled(Drawer)`
 
 	.item-quantity-wrapper {
 		border-radius: 2px;
-		overflow: hidden;
 		text-align: center;
 
 		button {

@@ -47,42 +47,33 @@ function ProductListItem(props: {
 	})();
 
 	return (
-		<animated.li key={node.id} ref={ref} style={useSpring(styles)}>
+		<animated.li key={node.id} className="w-full" ref={ref} style={useSpring(styles)}>
 			<Link href="/products/[handle]" as={`/products/${node.handle}`}>
-				<a className="anchor" title={`Shop ${node.title}`}>
+				<a className="block overflow-hidden" title={`Shop ${node.title}`}>
 					<ScaledBackgroundImage
 						className="scaled-background-image"
 						image={node.images.edges[0].node.originalSrc}
 					/>
 				</a>
 			</Link>
-			<div className="product-title truncate" title={node.title}>
+
+			<div className="product-title truncate uppercase" title={node.title}>
 				{node.title}
 			</div>
-			<div className="product-price">{dollarize(node.priceRange.minVariantPrice.amount)}</div>
+
+			<i className="block">{dollarize(node.priceRange.minVariantPrice.amount)}</i>
 		</animated.li>
 	);
 }
 
 const StyledProductList = styled.ul`
 	& > li {
-		width: 100%;
 		margin-bottom: ${theme.dimensions['4']};
 
-		.anchor {
-			display: block;
-			overflow: hidden;
-		}
-
 		.product-title {
-			text-transform: uppercase;
 			font-size: ${theme.text.lg};
 			font-weight: 100;
 			letter-spacing: 1px;
-		}
-
-		.product-price {
-			font-style: italic;
 		}
 
 		@media (min-width: ${theme.breakpoints.tablet}) {

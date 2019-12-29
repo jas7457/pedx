@@ -46,7 +46,7 @@ export default function Slider(props: SliderProps) {
 	});
 
 	return (
-		<StyledSlider className="flex">
+		<StyledSlider className="flex relative w-full">
 			{springProps.map(({ x, display, scale }, i) => (
 				<animated.div
 					{...bind()}
@@ -78,8 +78,6 @@ interface SliderProps {
 
 const StyledSlider = styled.div`
 	user-select: none;
-	position: relative;
-	width: 100%;
 	height: 500px;
 	max-height: 60vw;
 

@@ -41,10 +41,8 @@ export default function SidebarNav(props: SidebarNavProps) {
 }
 
 const StyledSidebarNav = styled.div`
-	ul {
-		li {
-			margin-bottom: ${theme.dimensions['4']};
-		}
+	li {
+		margin-bottom: ${theme.dimensions['4']};
 	}
 
 	a.link-anchor {

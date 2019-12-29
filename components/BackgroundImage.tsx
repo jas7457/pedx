@@ -1,31 +1,24 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
+import classNames from 'classnames';
 
 export default function BackgroundImage(props: BackgroundImageProps) {
 	const { image, className, title, children, onClick } = props;
 	return (
 		<StyledBackgroundImage
-			className={className}
+			className={classNames('relative w-full', className)}
 			title={title}
 			style={{ backgroundImage: `url(${image})` }}
 			onClick={onClick}
 		>
-			{children && <div className="children">{children}</div>}
+			{children && <div className="absolute w-full h-full">{children}</div>}
 		</StyledBackgroundImage>
 	);
 }
 
 const StyledBackgroundImage = styled.div`
-	position: relative;
 	background-size: cover;
 	background-position: center;
-	width: 100%;
-
-	.children {
-		position: absolute;
-		height: 100%;
-		width: 100%;
-	}
 `;
 
 export interface BackgroundImageProps {

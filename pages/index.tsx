@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Link from 'next/link';
 
 import CollectionGrid from '../components/CollectionGrid';
-import CollectionGrid2 from '../components/CollectionGrid2';
 import BackgroundImage from '../components/BackgroundImage';
 import ThemeButton from '../components/ThemeButton';
 import SectionTitle from '../components/SectionTitle';
@@ -18,7 +17,7 @@ export default function Index() {
 		<StyledIndex>
 			<BackgroundImage image="/background2.jpg" className="background-image">
 				<div className="inner">
-					<h1>pedx</h1>
+					<h1 className="white uppercase">pedx</h1>
 					<Link href="/shop">
 						<a>
 							<ThemeButton border>Shop</ThemeButton>
@@ -28,8 +27,7 @@ export default function Index() {
 			</BackgroundImage>
 
 			<SectionTitle title="Collections" />
-
-			<CollectionGrid2 />
+			<CollectionGrid />
 
 			<SectionTitle title="What's Popular" />
 			<PopularProducts />
@@ -49,7 +47,7 @@ const StyledIndex = styled.div`
 		height: 90vh;
 		background-attachment: fixed;
 
-		.children {
+		& > * {
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -60,8 +58,6 @@ const StyledIndex = styled.div`
 				font-size: ${theme.text['8xl']};
 				font-weight: 400;
 				letter-spacing: 1rem;
-				color: white;
-				text-transform: uppercase;
 			}
 		}
 	}

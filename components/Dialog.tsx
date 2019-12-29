@@ -32,8 +32,6 @@ export default function Dialog(props: DialogProps) {
 }
 
 const StyledDialog = styled.div`
-	padding: 0;
-
 	& > * {
 		padding: 1rem;
 	}

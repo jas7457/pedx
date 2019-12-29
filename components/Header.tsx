@@ -33,21 +33,21 @@ export default function Header() {
 				<FontAwesomeIcon icon={faBars} />
 			</button>
 
-			<div className="center flex-grow flex-shrink-none">
+			<div className="center flex-grow flex-shrink-none uppercase">
 				<Link href="/">
 					<a>pedestrian</a>
 				</Link>
 			</div>
 
 			<button
-				className="shopping-button flex-shrink-none clickable"
+				className="shopping-button flex-shrink-none relative clickable"
 				aria-label="Shopping Cart"
 				onClick={() => setIsCartOpen(true)}
 			>
 				<FontAwesomeIcon icon={faShoppingCart} />
 				{cartTotal > 0 && (
 					<Animation
-						className="shopping-count flex align-center justify-center"
+						className="shopping-count flex align-center justify-center absolute top-0 overflow-hidden"
 						config={config.wobbly}
 						animation={scaleToOne}
 					>
@@ -76,21 +76,15 @@ const StyledHeader = styled.header`
 	.center {
 		text-align: center;
 		font-size: ${theme.text['2xl']};
-		text-transform: uppercase;
 		letter-spacing: 12px;
 	}
 
 	.shopping-button {
-		position: relative;
-
 		.shopping-count {
-			position: absolute;
-			top: 0;
 			right: -0.4rem;
 			height: 14px;
 			width: 14px;
 			border-radius: 100%;
-			overflow: hidden;
 			border: 1px solid black;
 			background-color: white;
 			font-size: 0.5rem;

@@ -31,10 +31,6 @@ export const StyledProductPage = styled.div`
 		}
 	}
 
-	.selected-variant {
-		margin-top: ${theme.dimensions['4']};
-	}
-
 	.product-title {
 		letter-spacing: 1px;
 	}
@@ -92,58 +88,36 @@ export const StyledProductPage = styled.div`
 				margin-left: ${theme.dimensions['2']};
 			}
 		}
-
-		.color-swatch {
-			height: 50px;
-			width: 50px;
-			border-radius: 100%;
-			border: 1px solid ${theme.colors.gray.lighter};
-		}
 	}
 `;
 
 export const StyledVariantList = styled.ul`
-	display: flex;
-	flex-wrap: wrap;
 	margin-top: ${theme.dimensions['4']};
-	
+
 	.variant-wrapper {
 		height: 100px;
 		width: 100px;
 		margin-right: ${theme.dimensions['2']};
-		overflow: hidden;
 		border: 2px solid transparent;
 		padding: 2px;
-		
-		&.is-selected, &:hover, &:focus {
+
+		&.is-selected,
+		&:hover,
+		&:focus {
 			border-color: ${theme.colors.gray.darker};
 		}
-		
+
 		& > div {
 			margin: 1px;
-			overflow: hidden;
 			height: calc(100% - 2px);
 			width: calc(100% - 2px);
 		}
 	}
-	
+
 	.variant-image {
-		height: 100%;
-		width: 100%;
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
 		background-color: ${theme.colors.gray.lightest};
-		background-color: ${theme.colors.gray.lightest};
-	}
-	
-	.variant-title {
-		font-size: ${theme.text.xl};
-	}
-	
-	.variant-amount {
-		font-size: ${theme.text.sm}
-		font-weight: 100;
-		font-style: italic;
 	}
 `;

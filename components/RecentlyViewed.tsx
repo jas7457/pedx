@@ -81,7 +81,6 @@ const StyledRecentlyViewed = styled.ol`
 	overflow-x: auto;
 
 	li {
-		position: relative;
 		width: 42%;
 		&:after {
 			content: '';

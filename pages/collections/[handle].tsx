@@ -5,17 +5,18 @@ import { useQuery } from 'react-apollo';
 import styled from 'styled-components';
 
 import ProductList from '../../components/ProductList';
-import Hero from '../../components/Hero';
 import ConstrainedWidth from '../../components/ConstrainedWidth';
 import GraphQL from '../../components/GraphQL';
-import FadeIn from '../../components/FadeIn';
 import FourOhFour from '../../components/FourOhFour';
+import Animation from '../../components/Animation';
 
 import fadeInTransformUp from '../../animations/fadeInTransformUp';
+import fadeIn from '../../animations/fadeIn';
 import theme from '../../config/theme';
 
 import { ProductConnectionFragment } from '../../gql/products';
 import { COLLECTION_PAGE_QUERY } from '../../generated/COLLECTION_PAGE_QUERY';
+import BackgroundImage from '../../components/BackgroundImage';
 
 export default function CollectionPage() {
 	const router = useRouter();
@@ -37,20 +38,20 @@ export default function CollectionPage() {
 
 				return (
 					<StyledCollectionPage>
-						<FadeIn>
-							<Hero image={values.image?.originalSrc!}>
-								<StyledHeroChild className="flex align-center justify-center w-full h-full">
+						<Animation animation={fadeIn}>
+							<BackgroundImage className="hero" image={values.image?.originalSrc!}>
+								<div className="hero__child flex align-center justify-center w-full h-full">
 									<div className="w-full">
 										<h1>{values.title}</h1>
 										<i>{values.description}</i>
 									</div>
-								</StyledHeroChild>
-							</Hero>
-						</FadeIn>
+								</div>
+							</BackgroundImage>
+						</Animation>
 
-						<StyledConstrainedWidth>
+						<ConstrainedWidth>
 							<ProductList products={values.products.edges} animation={fadeInTransformUp} />
-						</StyledConstrainedWidth>
+						</ConstrainedWidth>
 					</StyledCollectionPage>
 				);
 			}}
@@ -60,10 +61,40 @@ export default function CollectionPage() {
 
 const StyledCollectionPage = styled.div`
 	margin-top: ${`-${theme.headerHeight}`};
-`;
 
-const StyledConstrainedWidth = styled(ConstrainedWidth)`
-	margin-top: ${theme.dimensions['4']};
+	.hero {
+		max-height: 80vh;
+		min-height: 60vh;
+		margin-bottom: ${theme.dimensions['4']};
+
+		&:after {
+			content: '';
+			display: block;
+			padding-bottom: 57%;
+		}
+	}
+
+	.hero__child {
+		color: white;
+		text-align: center;
+		background-color: rgba(0, 0, 0, 0.5);
+
+		h1 {
+			font-size: ${theme.text['5xl']};
+			font-weight: 100;
+			text-transform: uppercase;
+			letter-spacing: 6px;
+			word-break: break-word;
+
+			@media (min-width: ${theme.breakpoints.tablet}) {
+				font-size: ${theme.text['6xl']};
+			}
+		}
+
+		i {
+			color: ${theme.colors.gray.lighter};
+		}
+	}
 `;
 
 const COLLECTION_PAGE_GQL_QUERY = gql`
@@ -80,26 +111,4 @@ const COLLECTION_PAGE_GQL_QUERY = gql`
 		}
 	}
 	${ProductConnectionFragment}
-`;
-
-const StyledHeroChild = styled.div`
-	color: white;
-	text-align: center;
-	background-color: rgba(0, 0, 0, 0.5);
-
-	h1 {
-		font-size: ${theme.text['5xl']};
-		font-weight: 100;
-		text-transform: uppercase;
-		letter-spacing: 6px;
-		word-break: break-word;
-
-		@media (min-width: ${theme.breakpoints.tablet}) {
-			font-size: ${theme.text['6xl']};
-		}
-	}
-
-	i {
-		color: ${theme.colors.gray.lighter};
-	}
 `;

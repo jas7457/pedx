@@ -7,7 +7,7 @@ export default function Overlay(props: OverlayProps) {
 	const { isOpen, children, onClick } = props;
 
 	return (
-		<StyledOverlay className="OVERLAY" onClick={onClick} isOpen={isOpen}>
+		<StyledOverlay className="top-0 left-0 w-full h-full" onClick={onClick} isOpen={isOpen}>
 			{children}
 		</StyledOverlay>
 	);
@@ -16,10 +16,6 @@ export default function Overlay(props: OverlayProps) {
 const StyledOverlay = styled.div<{ isOpen: boolean }>`
 	display: ${props => (props.isOpen ? 'block' : 'none')};
 	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
 	will-change: opacity;
 	transition: opacity ${theme.transitionTime};
 	background-color: ${theme.backgrounds.faded_black};

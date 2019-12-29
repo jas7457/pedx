@@ -7,17 +7,20 @@ import { useQuery } from 'react-apollo';
 import { StyledProductPage, StyledVariantList } from './StyledProduct';
 import GraphQL from '../../GraphQL';
 import ScaledBackgroundImage from '../../ScaledBackgroundImage';
-import FadeIn from '../../FadeIn';
 import ImageMagnifier from '../../ImageManifier';
 import ThemeButton from '../../ThemeButton';
 import Heading from '../../Heading';
 import Select from '../../Select';
 import ProductSlider from '../../ProductSlider';
+import SectionTitle from '../../SectionTitle';
+import ConstrainedWidth from '../../ConstrainedWidth';
+import Animation from '../../Animation';
 
 // misc
 import { ProductStateReducer } from '../../../reducers/ProductState';
 import dollarize from '../../../helpers/dollarize';
 import { CartContext } from '../../../context/CartContext';
+import fadeIn from '../../../animations/fadeIn';
 
 // gql stuff
 import { PRODUCT_RECOMMENDATIONS_BY_ID_QUERY } from './ProductGQL';
@@ -26,8 +29,6 @@ import {
 	PRODUCT_BY_HANDLE_productByHandle_variants_edges
 } from '../../../generated/PRODUCT_BY_HANDLE';
 import { PRODUCT_RECOMMENDATIONS_BY_ID } from '../../../generated/PRODUCT_RECOMMENDATIONS_BY_ID';
-import SectionTitle from '../../SectionTitle';
-import ConstrainedWidth from '../../ConstrainedWidth';
 
 export default function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_productByHandle; variantId?: string }) {
 	const { values, variantId } = props;
@@ -125,9 +126,9 @@ export default function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_produc
 	return (
 		<StyledProductPage>
 			<div className="left">
-				<FadeIn key={selectedVariant?.node.image?.originalSrc}>
+				<Animation key={selectedVariant?.node.image?.originalSrc} animation={fadeIn}>
 					<ImageMagnifier src={selectedVariant?.node.image?.originalSrc!} />
-				</FadeIn>
+				</Animation>
 
 				<VariantSelector
 					variantsByUniqueImages={variantsByUniqueImages}
@@ -232,7 +233,7 @@ function VariantSelector(props: VariantProps) {
 	const { variantsByUniqueImages, selectedVariant, handleSelectedVariant } = props;
 
 	return (
-		<StyledVariantList className="list-reset">
+		<StyledVariantList className="list-reset flex flex-wrap">
 			{variantsByUniqueImages.map(variantObj => {
 				const isSelected = variantObj.variants.some(variant => variant === selectedVariant);
 				const variant = variantObj.variants[0];
@@ -244,12 +245,15 @@ function VariantSelector(props: VariantProps) {
 				return (
 					<li key={variant.node.id}>
 						<button
-							className={classNames('variant-wrapper', { 'is-selected': isSelected })}
+							className={classNames('variant-wrapper overflow-hidden', { 'is-selected': isSelected })}
 							title={`${variant.node.title} - ${dollarize(variant.node.priceV2.amount)}`}
 							onClick={() => handleSelectedVariant(selection)}
 						>
-							<div>
-								<ScaledBackgroundImage image={variantObj.image} className="variant-image" />
+							<div className="overflow-hidden">
+								<ScaledBackgroundImage
+									image={variantObj.image}
+									className="variant-image h-full w-full"
+								/>
 							</div>
 						</button>
 					</li>
