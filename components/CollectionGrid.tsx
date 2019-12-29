@@ -11,11 +11,13 @@ import GraphQL from './GraphQL';
 import Animation from './Animation';
 import BackgroundImage from './BackgroundImage';
 import Heading from './Heading';
+import AspectRatio from './AspectRatio';
 
 import theme from '../config/theme';
 import fadeIn from '../animations/fadeIn';
 
 import { COLLECTION_GRID_QUERY } from '../generated/COLLECTION_GRID_QUERY';
+import ConstrainedWidth from './ConstrainedWidth';
 
 export default function CollectionGrid() {
 	const result = useQuery<COLLECTION_GRID_QUERY>(COLLECTION_GRID_GQL_QUERY);
@@ -28,60 +30,61 @@ export default function CollectionGrid() {
 
 				return (
 					<Animation animation={fadeIn}>
-						<StyledCollectionGrid className="flex overflow-hidden white">
-							<BackgroundImage
-								className="selected-collection flex-shrink-none h-full"
-								image={selectedCollection.node.image!.originalSrc}
-							>
-								<div className="inner flex align-center justify-center flex-column h-full w-full">
-									<Heading
-										as="h1"
-										size="medium"
-										fontWeight={600}
-										className="collection-heading uppercase"
-									>
-										Collections
-									</Heading>
-
-									<div className="explore-collections">
-										<i>Explore our newest collections</i>
-									</div>
-
-									<Link
-										href={`/collections/[handle]`}
-										as={`collections/${selectedCollection.node.handle}`}
-									>
-										<a>
-											<ThemeButton>{`Shop ${selectedCollection.node.title}`}</ThemeButton>
-										</a>
-									</Link>
-								</div>
-							</BackgroundImage>
-
-							<div className="collection-item-wrapper flex flex-wrap flex-shrink-none h-full">
-								{data.collections.edges.map((product, index) => {
-									const { title, description, image, handle } = product.node;
-
-									return (
-										<div
-											className={classNames('collection-item overflow-hidden relative', {
-												'is-selected': index === selectedIndex
-											})}
-											onClick={() => setSelectedIndex(index)}
-										>
-											<ScaledBackgroundImage
-												className="scaled-image w-full h-full"
-												image={image!.originalSrc}
-											/>
-											<div className="collection-name absolute w-full h-full top-0 left-0 flex align-center justify-center uppercase">
-												{product.node.title}
-											</div>
+						<ConstrainedWidth>
+							<StyledCollectionGrid className="flex overflow-hidden white">
+								<AspectRatio className="selected-collection flex-shrink-none" ratio={3 / 4}>
+									<BackgroundImage image={selectedCollection.node.image!.originalSrc}>
+										<div className="inner flex align-center justify-center flex-column h-full w-full">
+											<Heading
+												as="h1"
+												size="medium"
+												fontWeight={600}
+												className="collection-heading uppercase"
 											>
+												Collections
+											</Heading>
+
+											<div className="explore-collections">
+												<i>Explore our newest collections</i>
+											</div>
+
+											<Link
+												href={`/collections/[handle]`}
+												as={`collections/${selectedCollection.node.handle}`}
+											>
+												<a>
+													<ThemeButton>{`Shop ${selectedCollection.node.title}`}</ThemeButton>
+												</a>
+											</Link>
 										</div>
-									);
-								})}
-							</div>
-						</StyledCollectionGrid>
+									</BackgroundImage>
+								</AspectRatio>
+
+								<div className="collection-item-wrapper flex flex-wrap flex-shrink-none h-full">
+									{data.collections.edges.map((product, index) => {
+										const { title, description, image, handle } = product.node;
+
+										return (
+											<div
+												className={classNames('collection-item overflow-hidden relative', {
+													'is-selected': index === selectedIndex
+												})}
+												onClick={() => setSelectedIndex(index)}
+											>
+												<ScaledBackgroundImage
+													className="scaled-image w-full h-full"
+													image={image!.originalSrc}
+												/>
+												<div className="collection-name absolute w-full h-full top-0 left-0 flex align-center justify-center uppercase">
+													{product.node.title}
+												</div>
+												>
+											</div>
+										);
+									})}
+								</div>
+							</StyledCollectionGrid>
+						</ConstrainedWidth>
 					</Animation>
 				);
 			}}
@@ -94,12 +97,6 @@ const StyledCollectionGrid = styled.div`
 	max-height: 75vh;
 
 	.selected-collection {
-		&:after {
-			content: '';
-			display: block;
-			padding-bottom: 75%;
-		}
-
 		.inner {
 			background-color: ${theme.backgrounds.faded_black_light};
 		}
@@ -143,6 +140,9 @@ const StyledCollectionGrid = styled.div`
 		letter-spacing: 1px;
 		font-size: ${theme.text.lg};
 		font-style: italic;
+		word-break: break-word;
+		padding: 0 0.5rem;
+		text-align: center;
 
 		&:hover,
 		&:focus {

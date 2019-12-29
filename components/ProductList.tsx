@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { useSpring, animated } from 'react-spring';
 
 import ScaledBackgroundImage from './ScaledBackgroundImage';
+import AspectRatio from './AspectRatio';
 
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 
@@ -50,10 +51,9 @@ function ProductListItem(props: {
 		<animated.li key={node.id} className="w-full" ref={ref} style={useSpring(styles)}>
 			<Link href="/products/[handle]" as={`/products/${node.handle}`}>
 				<a className="block overflow-hidden" title={`Shop ${node.title}`}>
-					<ScaledBackgroundImage
-						className="scaled-background-image"
-						image={node.images.edges[0].node.originalSrc}
-					/>
+					<AspectRatio ratio={1}>
+						<ScaledBackgroundImage image={node.images.edges[0].node.originalSrc} />
+					</AspectRatio>
 				</a>
 			</Link>
 
@@ -83,14 +83,6 @@ const StyledProductList = styled.ul`
 			&:nth-child(3n) {
 				margin-right: 0;
 			}
-		}
-	}
-
-	.scaled-background-image {
-		&:after {
-			content: '';
-			display: block;
-			padding-bottom: 100%;
 		}
 	}
 `;

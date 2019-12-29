@@ -8,6 +8,7 @@ import GraphQL from './GraphQL';
 import BackgroundImage from './BackgroundImage';
 import ConstrainedWidth from './ConstrainedWidth';
 import Animation from './Animation';
+import AspectRatio from './AspectRatio';
 
 import useLocalStorage from '../hooks/useLocalStorage';
 
@@ -52,10 +53,9 @@ export default function RecentlyViewed() {
 
 										return (
 											<li key={items[index]} className="flex-shrink-none relative">
-												<div className="absolute w-full h-full top-0 left-0">
+												<AspectRatio ratio={1}>
 													<BackgroundImage
 														image={data.productByHandle.images.edges[0].node.originalSrc}
-														className="recent-background-image h-full w-full"
 													>
 														<Link href="/products/[handle]" as={`products/${items[index]}`}>
 															<a className="product-link flex align-center justify-center absolute top-0 left-0 w-full h-full overflow-hidden white">
@@ -63,7 +63,7 @@ export default function RecentlyViewed() {
 															</a>
 														</Link>
 													</BackgroundImage>
-												</div>
+												</AspectRatio>
 											</li>
 										);
 									}}
@@ -82,15 +82,6 @@ const StyledRecentlyViewed = styled.ol`
 
 	li {
 		width: 42%;
-		&:after {
-			content: '';
-			display: block;
-			padding-bottom: 100%;
-		}
-
-		.recent-background-image {
-			background-position: top center;
-		}
 
 		@media (min-width: ${theme.breakpoints.tablet}) {
 			width: 24%;
