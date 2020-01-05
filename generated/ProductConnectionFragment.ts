@@ -114,6 +114,10 @@ export interface ProductConnectionFragment_edges_node {
    */
   availableForSale: boolean;
   /**
+   * A categorization that a product can be tagged with, commonly used for filtering and searching.
+   */
+  productType: string;
+  /**
    * The price range.
    */
   priceRange: ProductConnectionFragment_edges_node_priceRange;

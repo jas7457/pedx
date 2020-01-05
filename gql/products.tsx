@@ -9,6 +9,7 @@ export const ProductConnectionFragment = gql`
 				description
 				handle
 				availableForSale
+				productType
 				priceRange {
 					minVariantPrice {
 						amount

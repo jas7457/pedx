@@ -48,27 +48,24 @@ export default function CollectionGrid() {
 												<i>Explore our newest collections</i>
 											</div>
 
-											<Link
+											<ThemeButton
 												href={`/collections/[handle]`}
-												as={`collections/${selectedCollection.node.handle}`}
+												hrefAs={`collections/${selectedCollection.node.handle}`}
 											>
-												<a>
-													<ThemeButton>{`Shop ${selectedCollection.node.title}`}</ThemeButton>
-												</a>
-											</Link>
+												{`Shop ${selectedCollection.node.title}`}
+											</ThemeButton>
 										</div>
 									</BackgroundImage>
 								</AspectRatio>
 
-								<div className="collection-item-wrapper flex flex-wrap flex-shrink-none h-full">
+								<ol className="collection-item-wrapper list-reset flex flex-wrap flex-shrink-none h-full">
 									{data.collections.edges.map((product, index) => {
 										const { title, description, image, handle } = product.node;
 
 										return (
-											<div
-												className={classNames('collection-item overflow-hidden relative', {
-													'is-selected': index === selectedIndex
-												})}
+											<li
+												key={handle}
+												className="collection-item overflow-hidden relative flex-shrink-none"
 												onClick={() => setSelectedIndex(index)}
 											>
 												<ScaledBackgroundImage
@@ -79,10 +76,10 @@ export default function CollectionGrid() {
 													{product.node.title}
 												</div>
 												>
-											</div>
+											</li>
 										);
 									})}
-								</div>
+								</ol>
 							</StyledCollectionGrid>
 						</ConstrainedWidth>
 					</Animation>

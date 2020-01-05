@@ -65,7 +65,17 @@ export default function ShopList(props: {
 			</div>
 
 			<GraphQL result={result}>
-				{data => <ProductList className="product-list" products={data.products.edges} animation={fadeIn} />}
+				{data => (
+					<ProductList
+						className="product-list"
+						animation={fadeIn}
+						products={data.products.edges.map(edge => ({
+							...edge.node,
+							image: edge.node.images.edges[0].node.originalSrc,
+							price: edge.node.priceRange.minVariantPrice.amount
+						}))}
+					/>
+				)}
 			</GraphQL>
 		</StyledShopList>
 	);

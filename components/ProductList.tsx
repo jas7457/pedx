@@ -12,8 +12,6 @@ import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import dollarize from '../helpers/dollarize';
 import theme from '../config/theme';
 
-import { COLLECTION_PAGE_QUERY_collectionByHandle_products_edges } from '../generated/COLLECTION_PAGE_QUERY';
-
 export default function ProductList(props: ProductListProps) {
 	const { products, className, animation } = props;
 
@@ -22,20 +20,17 @@ export default function ProductList(props: ProductListProps) {
 			{products.length === 0 ? (
 				<>No products found</>
 			) : (
-				products.map(product => (
-					<ProductListItem key={product.node.id} product={product} animation={animation} />
-				))
+				products.map(product => <ProductListItem key={product.id} product={product} animation={animation} />)
 			)}
 		</StyledProductList>
 	);
 }
 
 function ProductListItem(props: {
-	product: COLLECTION_PAGE_QUERY_collectionByHandle_products_edges;
+	product: ProductListProps['products'][number];
 	animation?: { from: object; to: object };
 }) {
 	const { product, animation } = props;
-	const node = product.node;
 
 	const { ref, isIntersecting } = useIntersectionObserver<HTMLLIElement>();
 
@@ -48,20 +43,20 @@ function ProductListItem(props: {
 	})();
 
 	return (
-		<animated.li key={node.id} className="w-full" ref={ref} style={useSpring(styles)}>
-			<Link href="/products/[handle]" as={`/products/${node.handle}`}>
-				<a className="block overflow-hidden" title={`Shop ${node.title}`}>
+		<animated.li key={product.id} className="w-full" ref={ref} style={useSpring(styles)}>
+			<Link href="/products/[handle]" as={`/products/${product.handle}`}>
+				<a className="block overflow-hidden" title={`Shop ${product.title}`}>
 					<AspectRatio ratio={1}>
-						<ScaledBackgroundImage image={node.images.edges[0].node.originalSrc} />
+						<ScaledBackgroundImage image={product.image} />
 					</AspectRatio>
 				</a>
 			</Link>
 
-			<div className="product-title truncate uppercase" title={node.title}>
-				{node.title}
+			<div className="product-title truncate uppercase" title={product.title}>
+				{product.title}
 			</div>
 
-			<i className="block">{dollarize(node.priceRange.minVariantPrice.amount)}</i>
+			<i className="block">{dollarize(product.price)}</i>
 		</animated.li>
 	);
 }
@@ -88,7 +83,7 @@ const StyledProductList = styled.ul`
 `;
 
 interface ProductListProps {
-	products: COLLECTION_PAGE_QUERY_collectionByHandle_products_edges[];
+	products: Array<{ id: string; image: string; title: string; handle: string; price: string }>;
 	className?: string;
 	animation?: { from: object; to: object };
 }

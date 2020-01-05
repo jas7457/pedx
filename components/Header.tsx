@@ -24,7 +24,7 @@ export default function Header() {
 		: 0;
 
 	return (
-		<StyledHeader className="flex w-full">
+		<StyledHeader className="flex w-full flex-shrink-none">
 			<button
 				className="flex-shrink-none clickable"
 				aria-label="Main Menu"

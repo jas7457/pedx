@@ -1,19 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
+import uuidv4 from 'uuid/v4';
 
+import useLazyRef from '../hooks/useLazyRef';
 import theme from '../config/theme';
 
 export default function Select(props: SelectProps) {
 	const { options, value, onChange, label, disabled = false, className } = props;
+	const { current: id } = useLazyRef(uuidv4);
 
 	return (
 		<>
 			{label && (
-				<label>
+				<label htmlFor={id}>
 					<b>{label}</b>
 				</label>
 			)}
-			<StyledSelect value={value} onChange={onChange} disabled={disabled} className={className}>
+			<StyledSelect id={id} value={value} onChange={onChange} disabled={disabled} className={className}>
 				{options.map(option => {
 					return <option key={option}>{option}</option>;
 				})}

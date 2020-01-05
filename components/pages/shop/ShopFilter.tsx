@@ -135,9 +135,6 @@ const StyledShopFilter = styled.div`
 		color: ${theme.colors.gray.medium};
 	}
 
-	.filter-heading {
-		color: ${theme.colors.text};
-	}
 
 	.clear-filter {
 		font-size: ${theme.dimensions['3']};

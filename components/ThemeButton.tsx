@@ -10,6 +10,7 @@ function ThemeButton(props: ThemeButtonProps) {
 		children,
 		onClick,
 		href,
+		hrefAs,
 		className: propClassName,
 		inverse = false,
 		border = false,
@@ -20,7 +21,7 @@ function ThemeButton(props: ThemeButtonProps) {
 
 	if (href) {
 		return (
-			<Link href={href}>
+			<Link href={href} as={hrefAs}>
 				<a className={className}>{children}</a>
 			</Link>
 		);
@@ -59,6 +60,9 @@ export default styled(ThemeButton)`
 		&.inverse {
 			background-color: black;
 			color: white;
+			&.border {
+				border-color: white;
+			}
 		}
 	}
 
@@ -78,6 +82,7 @@ interface ThemeButtonProps {
 	className?: string;
 	onClick?: React.MouseEventHandler<HTMLButtonElement>;
 	href?: string;
+	hrefAs?: string;
 	inverse?: boolean;
 	border?: boolean;
 	disabled?: boolean;

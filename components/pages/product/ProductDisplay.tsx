@@ -11,10 +11,10 @@ import ImageMagnifier from '../../ImageManifier';
 import ThemeButton from '../../ThemeButton';
 import Heading from '../../Heading';
 import Select from '../../Select';
-import ProductSlider from '../../ProductSlider';
 import SectionTitle from '../../SectionTitle';
 import ConstrainedWidth from '../../ConstrainedWidth';
 import Animation from '../../Animation';
+import Slider from '../../Slider';
 
 // misc
 import { ProductStateReducer } from '../../../reducers/ProductState';
@@ -218,8 +218,6 @@ export default function ProductDisplay(props: { values: PRODUCT_BY_HANDLE_produc
 						dispatch({ type: 'SET_ADDING', adding: false });
 						dispatch({ type: 'SET_CURRENT_QUANTITY', quantity: 1 });
 					}}
-					border
-					inverse
 					disabled={state.adding}
 				>
 					Add to Cart
@@ -302,11 +300,13 @@ export const Recommendations = React.memo(function Recommendations(props: Recomm
 							<SectionTitle title="Similar Products" />
 
 							<ConstrainedWidth>
-								<ProductSlider
-									products={data.productRecommendations.map(r => ({
+								<Slider
+									items={data.productRecommendations.map(r => ({
+										id: r.id,
 										image: r.images.edges[0].node.originalSrc,
 										title: r.title,
-										href: `/products/${r.handle}`
+										href: '/products/[handle]',
+										as: `/products/${r.handle}`
 									}))}
 								/>
 							</ConstrainedWidth>

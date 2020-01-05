@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Link from 'next/link';
 
-import CollectionGrid from '../components/CollectionGrid';
+import CollectionGrid2 from '../components/CollectionGrid2';
 import BackgroundImage from '../components/BackgroundImage';
 import ThemeButton from '../components/ThemeButton';
 import SectionTitle from '../components/SectionTitle';
@@ -18,16 +17,11 @@ export default function Index() {
 			<BackgroundImage image="/background2.jpg" className="background-image">
 				<div className="inner">
 					<h1 className="white uppercase">pedx</h1>
-					<Link href="/shop">
-						<a>
-							<ThemeButton border>Shop</ThemeButton>
-						</a>
-					</Link>
+					<ThemeButton href="/shop">Shop</ThemeButton>
 				</div>
 			</BackgroundImage>
 
-			<SectionTitle title="Collections" />
-			<CollectionGrid />
+			<CollectionGrid2 />
 
 			<SectionTitle title="What's Popular" />
 			<PopularProducts />

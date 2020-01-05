@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
 
 import GraphQL from './GraphQL';
-import ProductSlider from './ProductSlider';
+import Slider from './Slider';
 
 import { ProductConnectionFragment } from '../gql/products';
 import { ProductSortKeys } from '../generated/globalTypes';
@@ -11,28 +11,42 @@ import { SHOP_PAGE_PRODUCTS_QUERY } from '../generated/SHOP_PAGE_PRODUCTS_QUERY'
 
 export default function PopularProducts() {
 	const result = useQuery<SHOP_PAGE_PRODUCTS_QUERY>(POPULAR_PRODUCTS_GQL_QUERY);
-	const [ref, setRef] = useState<HTMLDivElement | null>(null);
 
 	return (
-		<div ref={setRef}>
+		<section>
 			<GraphQL result={result}>
-				{data => {
-					if (!ref) {
-						return null;
-					}
-
-					return (
-						<ProductSlider
-							products={data.products.edges.map(edge => ({
-								image: edge.node.images.edges[0].node.originalSrc,
-								title: edge.node.title,
-								href: `/products/${edge.node.handle}`
-							}))}
-						/>
-					);
-				}}
+				{data => (
+					<Slider
+						includeIndex={true}
+						items={data.products.edges.map(edge => ({
+							id: edge.node.id,
+							image: edge.node.images.edges[0].node.originalSrc,
+							title: edge.node.title,
+							subtitle: edge.node.productType,
+							as: `/products/${edge.node.handle}`,
+							href: '/products/[handle]'
+						}))}
+						config={{
+							mobile: {
+								widthPercent: 75,
+								onScreen: 1,
+								showButtons: true
+							},
+							tablet: {
+								widthPercent: 40,
+								onScreen: 2,
+								showButtons: true
+							},
+							desktop: {
+								widthPercent: 100 / 3,
+								onScreen: 3,
+								showButtons: true
+							}
+						}}
+					/>
+				)}
 			</GraphQL>
-		</div>
+		</section>
 	);
 }
 

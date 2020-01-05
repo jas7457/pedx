@@ -40,36 +40,35 @@ export default function RecentlyViewed() {
 	return (
 		<>
 			<SectionTitle title="Recently Viewed" />
+
 			<Animation animation={recentlyViewedAnimation}>
 				<ConstrainedWidth>
 					<StyledRecentlyViewed className="list-reset flex">
-						{queries.map((query, index) => {
-							return (
-								<GraphQL result={query}>
-									{data => {
-										if (!data.productByHandle) {
-											return null;
-										}
+						{queries.map((query, index) => (
+							<GraphQL result={query} key={index}>
+								{data => {
+									if (!data.productByHandle) {
+										return null;
+									}
 
-										return (
-											<li key={items[index]} className="flex-shrink-none relative">
-												<AspectRatio ratio={1}>
-													<BackgroundImage
-														image={data.productByHandle.images.edges[0].node.originalSrc}
-													>
-														<Link href="/products/[handle]" as={`products/${items[index]}`}>
-															<a className="product-link flex align-center justify-center absolute top-0 left-0 w-full h-full overflow-hidden white">
-																{data.productByHandle.title}
-															</a>
-														</Link>
-													</BackgroundImage>
-												</AspectRatio>
-											</li>
-										);
-									}}
-								</GraphQL>
-							);
-						})}
+									return (
+										<li key={items[index]} className="flex-shrink-none relative">
+											<AspectRatio ratio={1}>
+												<BackgroundImage
+													image={data.productByHandle.images.edges[0].node.originalSrc}
+												>
+													<Link href="/products/[handle]" as={`products/${items[index]}`}>
+														<a className="product-link flex align-center justify-center absolute top-0 left-0 w-full h-full overflow-hidden white">
+															{data.productByHandle.title}
+														</a>
+													</Link>
+												</BackgroundImage>
+											</AspectRatio>
+										</li>
+									);
+								}}
+							</GraphQL>
+						))}
 					</StyledRecentlyViewed>
 				</ConstrainedWidth>
 			</Animation>

@@ -14,7 +14,11 @@ const StyledScaledBackgroundImage = styled(BackgroundImage)`
 	will-change: transform;
 	transition: transform ${theme.transitionTime};
 
-	&:hover {
+	&:hover,
+	a:hover &,
+	a:focus &,
+	button:hover &,
+	button:focus & {
 		transform: scale(${theme.scale.sm});
 	}
 `;

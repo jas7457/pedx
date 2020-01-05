@@ -1,3 +1,8 @@
-export default function dollarize(num: string): string {
-	return `$${parseFloat(num).toFixed(2)}`;
+export default function dollarize(num: string, compact = false): string {
+	const all = parseFloat(num);
+	if (compact && Math.floor(all) === all) {
+		return `$${Math.floor(all)}`;
+	}
+
+	return `$${all.toFixed(2)}`;
 }

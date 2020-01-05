@@ -53,7 +53,14 @@ export default function CollectionPage() {
 						</Animation>
 
 						<ConstrainedWidth>
-							<ProductList products={values.products.edges} animation={fadeInTransformUp} />
+							<ProductList
+								animation={fadeInTransformUp}
+								products={values.products.edges.map(edge => ({
+									...edge.node,
+									image: edge.node.images.edges[0].node.originalSrc,
+									price: edge.node.priceRange.minVariantPrice.amount
+								}))}
+							/>
 						</ConstrainedWidth>
 					</StyledCollectionPage>
 				);

@@ -1,44 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
 
 import GraphQL from './GraphQL';
-import ProductSlider from './ProductSlider';
+import Slider from './Slider';
 
 import { ProductConnectionFragment } from '../gql/products';
 import { ProductSortKeys } from '../generated/globalTypes';
 import { SHOP_PAGE_PRODUCTS_QUERY } from '../generated/SHOP_PAGE_PRODUCTS_QUERY';
+import dollarize from '../helpers/dollarize';
 
 export default function NewProducts() {
 	const result = useQuery<SHOP_PAGE_PRODUCTS_QUERY>(NEW_PRODUCTS_GQL_QUERY);
-	const [ref, setRef] = useState<HTMLDivElement | null>(null);
 
 	return (
-		<div ref={setRef}>
+		<section>
 			<GraphQL result={result}>
-				{data => {
-					if (!ref) {
-						return null;
-					}
-
-					return (
-						<ProductSlider
-							products={data.products.edges.map(edge => ({
-								image: edge.node.images.edges[0].node.originalSrc,
-								title: edge.node.title,
-								href: `/products/${edge.node.handle}`
-							}))}
-						/>
-					);
-				}}
+				{data => (
+					<Slider
+						includeIndex={true}
+						items={data.products.edges.map(edge => ({
+							id: edge.node.id,
+							image: edge.node.images.edges[0].node.originalSrc,
+							title: edge.node.title,
+							subtitle: dollarize(edge.node.priceRange.minVariantPrice.amount, true),
+							href: '/products/[handle]',
+							as: `/products/${edge.node.handle}`
+						}))}
+					/>
+				)}
 			</GraphQL>
-		</div>
+		</section>
 	);
 }
 
 const NEW_PRODUCTS_GQL_QUERY = gql`
 	query NEW_PRODUCTS_QUERY {
-		products(first: 20, sortKey: ${ProductSortKeys.CREATED_AT}) {
+		products(first: 20, sortKey: ${ProductSortKeys.CREATED_AT}, reverse: true) {
 			...ProductConnectionFragment
 		}
 	}

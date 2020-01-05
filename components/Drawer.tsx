@@ -46,7 +46,6 @@ const StyledOverlayChildren = styled(animated.div)<{
 	z-index: 2;
 
 	background: white;
-	color: ${theme.colors.text};
 	max-width: ${props => (props['data-wide'] ? '600px' : '300px')};
 	${props => `${props['data-side']}: 0`};
 `;
