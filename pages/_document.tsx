@@ -1,30 +1,16 @@
 import React from 'react';
-import Document, { Head, Main, NextScript } from 'next/document';
-import { ServerStyleSheet } from 'styled-components';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 
 export default class MyDocument extends Document {
-	// @ts-ignore
-	static getInitialProps({ renderPage }) {
-		const sheet = new ServerStyleSheet();
-		// @ts-ignore
-		const page = renderPage(App => props => sheet.collectStyles(<App {...props} />));
-		const styleTags = sheet.getStyleElement();
-		return { ...page, styleTags };
-	}
-
 	public render() {
-		// @ts-ignore
-		const { styleTags } = this.props;
-
 		return (
-			<html lang="en">
+			<Html lang="en">
 				<Head>
 					<>
 						<link
 							href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap"
 							rel="stylesheet"
 						/>
-						{styleTags}
 					</>
 				</Head>
 
@@ -32,7 +18,7 @@ export default class MyDocument extends Document {
 					<Main />
 					<NextScript />
 				</body>
-			</html>
+			</Html>
 		);
 	}
 }

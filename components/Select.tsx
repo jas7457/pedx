@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 
 import useLazyRef from '../hooks/useLazyRef';
 import theme from '../config/theme';
